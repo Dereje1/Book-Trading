@@ -1,0 +1,8 @@
+body {
+  margin-top: 50px;
+}
+
+body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {
+  color: yellow;
+  text-decoration: none;
+}

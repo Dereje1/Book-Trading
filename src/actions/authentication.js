@@ -19,26 +19,25 @@ export function getUser(){
 }
 
 export function newUser(signupinfo){
-  return function(){
+  return new Promise(function(resolve,reject){
     axios.post('/signup',signupinfo)
       .then(function(response){
-        console.log("Is success")
-        console.log(response.data)
+        resolve(response.data)
       })
       .catch(function(err){
-        console,log("Is error!")
+        reject(err)
       })
-  }
+  })
 }
 
 export function checkUser(logininfo){
-  return function(){
+  return new Promise(function(resolve,reject){
     axios.post('/login',logininfo)
       .then(function(response){
-        console.log(response.data)
+        resolve(response.data)
       })
       .catch(function(err){
-        console,log(err)
+        reject(err)
       })
-  }
+  })
 }

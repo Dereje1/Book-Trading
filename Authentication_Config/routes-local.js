@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
       res.json({
                 authenticated: true,
                 userip: ip,
-                fullData: req.user
+                userEmail: req.user.local.email
             });
     });
 
@@ -41,16 +41,41 @@ module.exports = function(app, passport) {
     // SIGNUP ==============================
     // =====================================
     // show the signup form
-    app.post('/signup', passport.authenticate('local-signup'),function(req,res){
-      //console.log(res)
-      res.redirect('/')
+    app.post('/signup', function(req, res, next) {
+      passport.authenticate('local-signup', function(err, user, info) {
+        console.log(err,user,info)
+        if (err) {
+          return next(err);
+         }
+        if (!user) {
+          return res.json({status:'error',message:info});
+        }
+        else{
+          req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            return res.json({status:'success',message:user.local.email + " Signed Up!"});
+          });
+        }
+      })(req, res, next);
     });
    // process the login form
-    app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
+   app.post('/login', function(req, res, next) {
+     passport.authenticate('local-login', function(err, user, info) {
+       console.log(err,user,info)
+       if (err) {
+         return next(err);
+        }
+       if (!user) {
+         return res.json({status:'error',message:info});
+       }
+       else{
+         req.logIn(user, function(err) {
+           if (err) { return next(err); }
+           return res.json({status:'success',message:user.local.email + " logged in!!"});
+         });
+       }
+     })(req, res, next);
+   });
 
 };
 
@@ -69,6 +94,6 @@ function isLoggedIn(req, res, next) {
     res.json({
       authenticated: false,
       userip: ip,
-      fullData: null
+      userEmail: null
     });
 }

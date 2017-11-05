@@ -10,7 +10,7 @@ class Menu extends React.Component{
       return(
         <Nav pullRight>
           <NavItem eventKey={3} href="/">Home</NavItem>
-          <NavItem eventKey={4} href="/logout">Logout @ {this.props.user.user.username}</NavItem>
+          <NavItem eventKey={4} href="/logout">Logout @ {this.props.user.user.userEmail}</NavItem>
         </Nav>
       )
     }
@@ -26,7 +26,7 @@ class Menu extends React.Component{
   }
 
   render(){
-    let bcolor = (this.props.user.user.authenticated) ? "red" : "white"
+    let bcolor = (this.props.user.user.authenticated) ? "#7ef74a" : "white"
     return(
     <Navbar fixedTop>
         <Navbar.Header>

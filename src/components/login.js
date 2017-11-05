@@ -1,17 +1,17 @@
 "use strict"//component allows creation of new poll for and authenticated user
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux';
 import {findDOMNode} from 'react-dom';
 import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-bootstrap'
 
 import {checkUser} from '../actions/authentication'
+import Info from './infomodal'
 
 class Login extends React.Component{
     constructor(props){
-      super(props)
-    }
-    componentDidMount(){
+      super(props);
+      this.state = {
+        message:""//client interaction message
+      }
     }
     handleLogin(){
       //handle info from the form
@@ -21,7 +21,18 @@ class Login extends React.Component{
         email:email,
         password:pass
       }
-      this.props.checkUser(logininfo)
+      checkUser(logininfo).then((response)=>{
+        if(response.status==="error"){
+          console.log(this.state.message)
+          this.setState({message:response.message})
+        }
+        else{
+          window.location="/"
+        }
+      })
+      .catch(function(err){
+        console.log(err)
+      })
     }
     render(){
         return(
@@ -42,17 +53,10 @@ class Login extends React.Component{
                     <Button block bsStyle="warning" type="submit" onClick={this.handleLogin.bind(this)}>Login</Button>
                   </Col>
                 </Row>
+                <Info message={this.state.message}/>
               </Grid>
             )
       }
     }
 
-function mapStateToProps(state){
-  return state
-}
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({
-          checkUser:checkUser
-          }, dispatch)
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Login)
+export default (Login)

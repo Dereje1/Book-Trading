@@ -6746,24 +6746,23 @@ function getUser() {
 }
 
 function newUser(signupinfo) {
-  return function () {
+  return new Promise(function (resolve, reject) {
     _axios2.default.post('/signup', signupinfo).then(function (response) {
-      console.log("Is success");
-      console.log(response.data);
+      resolve(response.data);
     }).catch(function (err) {
-      console, log("Is error!");
+      reject(err);
     });
-  };
+  });
 }
 
 function checkUser(logininfo) {
-  return function () {
+  return new Promise(function (resolve, reject) {
     _axios2.default.post('/login', logininfo).then(function (response) {
-      console.log(response.data);
+      resolve(response.data);
     }).catch(function (err) {
-      console, log(err);
+      reject(err);
     });
-  };
+  });
 }
 
 /***/ }),
@@ -37640,7 +37639,7 @@ var Menu = function (_React$Component) {
             _reactBootstrap.NavItem,
             { eventKey: 4, href: '/logout' },
             'Logout @ ',
-            this.props.user.user.username
+            this.props.user.user.userEmail
           )
         );
       } else {
@@ -37668,7 +37667,7 @@ var Menu = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var bcolor = this.props.user.user.authenticated ? "red" : "white";
+      var bcolor = this.props.user.user.authenticated ? "#7ef74a" : "white";
       return _react2.default.createElement(
         _reactBootstrap.Navbar,
         { fixedTop: true },
@@ -50146,15 +50145,15 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(46);
-
-var _redux = __webpack_require__(33);
-
 var _reactDom = __webpack_require__(14);
 
 var _reactBootstrap = __webpack_require__(58);
 
 var _authentication = __webpack_require__(110);
+
+var _infomodal = __webpack_require__(420);
+
+var _infomodal2 = _interopRequireDefault(_infomodal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50170,15 +50169,19 @@ var Signup = function (_React$Component) {
   function Signup(props) {
     _classCallCheck(this, Signup);
 
-    return _possibleConstructorReturn(this, (Signup.__proto__ || Object.getPrototypeOf(Signup)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Signup.__proto__ || Object.getPrototypeOf(Signup)).call(this, props));
+
+    _this.state = {
+      message: "" //client interaction message
+    };
+    return _this;
   }
 
   _createClass(Signup, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {}
-  }, {
     key: 'handleNewSignUp',
     value: function handleNewSignUp() {
+      var _this2 = this;
+
       //handle info from the form
       var email = (0, _reactDom.findDOMNode)(this.refs.email).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
@@ -50186,7 +50189,15 @@ var Signup = function (_React$Component) {
         email: email,
         password: pass
       };
-      this.props.newUser(signupinfo);
+      (0, _authentication.newUser)(signupinfo).then(function (response) {
+        if (response.status === "error") {
+          _this2.setState({ message: response.message });
+        } else {
+          window.location = "/";
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
     }
   }, {
     key: 'render',
@@ -50235,7 +50246,8 @@ var Signup = function (_React$Component) {
               'Sign Up'
             )
           )
-        )
+        ),
+        _react2.default.createElement(_infomodal2.default, { message: this.state.message })
       );
     }
   }]);
@@ -50243,15 +50255,7 @@ var Signup = function (_React$Component) {
   return Signup;
 }(_react2.default.Component);
 
-function mapStateToProps(state) {
-  return state;
-}
-function mapDispatchToProps(dispatch) {
-  return (0, _redux.bindActionCreators)({
-    newUser: _authentication.newUser
-  }, dispatch);
-}
-exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Signup);
+exports.default = Signup;
 
 /***/ }),
 /* 417 */
@@ -50270,15 +50274,15 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRedux = __webpack_require__(46);
-
-var _redux = __webpack_require__(33);
-
 var _reactDom = __webpack_require__(14);
 
 var _reactBootstrap = __webpack_require__(58);
 
 var _authentication = __webpack_require__(110);
+
+var _infomodal = __webpack_require__(420);
+
+var _infomodal2 = _interopRequireDefault(_infomodal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50294,15 +50298,19 @@ var Login = function (_React$Component) {
   function Login(props) {
     _classCallCheck(this, Login);
 
-    return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+
+    _this.state = {
+      message: "" //client interaction message
+    };
+    return _this;
   }
 
   _createClass(Login, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {}
-  }, {
     key: 'handleLogin',
     value: function handleLogin() {
+      var _this2 = this;
+
       //handle info from the form
       var email = (0, _reactDom.findDOMNode)(this.refs.email).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
@@ -50310,7 +50318,16 @@ var Login = function (_React$Component) {
         email: email,
         password: pass
       };
-      this.props.checkUser(logininfo);
+      (0, _authentication.checkUser)(logininfo).then(function (response) {
+        if (response.status === "error") {
+          console.log(_this2.state.message);
+          _this2.setState({ message: response.message });
+        } else {
+          window.location = "/";
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
     }
   }, {
     key: 'render',
@@ -50359,7 +50376,8 @@ var Login = function (_React$Component) {
               'Login'
             )
           )
-        )
+        ),
+        _react2.default.createElement(_infomodal2.default, { message: this.state.message })
       );
     }
   }]);
@@ -50367,15 +50385,7 @@ var Login = function (_React$Component) {
   return Login;
 }(_react2.default.Component);
 
-function mapStateToProps(state) {
-  return state;
-}
-function mapDispatchToProps(dispatch) {
-  return (0, _redux.bindActionCreators)({
-    checkUser: _authentication.checkUser
-  }, dispatch);
-}
-exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Login);
+exports.default = Login;
 
 /***/ }),
 /* 418 */
@@ -50421,6 +50431,101 @@ function userStatusReducer() {
   }
   return state;
 }
+
+/***/ }),
+/* 420 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+ //displays modal on user interaction
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(58);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Info = function (_Component) {
+  _inherits(Info, _Component);
+
+  function Info(props) {
+    _classCallCheck(this, Info);
+
+    //initialize modal show state to false
+    var _this = _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).call(this, props));
+
+    _this.state = {
+      show: false
+    };
+    return _this;
+  }
+
+  _createClass(Info, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.message !== this.props.message) {
+        //only show if new message in state (home)
+        this.setState({ show: true });
+      }
+      //
+    }
+  }, {
+    key: 'open',
+    value: function open() {
+      this.setState({
+        show: true
+      });
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      //when modal is closed reset back to original state
+      this.setState({
+        show: false
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        _reactBootstrap.Modal,
+        {
+          show: this.state.show,
+          onHide: this.close.bind(this),
+          container: this,
+          'aria-labelledby': 'contained-modal-title'
+        },
+        _react2.default.createElement(
+          _reactBootstrap.Modal.Header,
+          { closeButton: true },
+          _react2.default.createElement(
+            _reactBootstrap.Modal.Title,
+            { id: 'contained-modal-title' },
+            this.props.message
+          )
+        )
+      );
+    }
+  }]);
+
+  return Info;
+}(_react.Component);
+
+exports.default = Info;
 
 /***/ })
 /******/ ]);

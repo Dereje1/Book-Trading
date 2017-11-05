@@ -1,18 +1,17 @@
 "use strict"//component allows creation of new poll for and authenticated user
 import React from 'react'
-import {connect} from 'react-redux'
-import {bindActionCreators} from 'redux';
 import {findDOMNode} from 'react-dom';
 import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-bootstrap'
 
 import {newUser} from '../actions/authentication'
+import Info from './infomodal'
 
 class Signup extends React.Component{
     constructor(props){
       super(props)
-
-    }
-    componentDidMount(){
+      this.state = {
+        message:""//client interaction message
+      }
     }
     handleNewSignUp(){
       //handle info from the form
@@ -22,7 +21,17 @@ class Signup extends React.Component{
         email:email,
         password:pass
       }
-      this.props.newUser(signupinfo)
+      newUser(signupinfo).then((response)=>{
+        if(response.status==="error"){
+          this.setState({message:response.message})
+        }
+        else{
+          window.location="/"
+        }
+      })
+      .catch(function(err){
+        console.log(err)
+      })
     }
     render(){
         return(
@@ -43,17 +52,10 @@ class Signup extends React.Component{
                     <Button block bsStyle="warning" type="submit" onClick={this.handleNewSignUp.bind(this)}>Sign Up</Button>
                   </Col>
                 </Row>
+                <Info message={this.state.message}/>
               </Grid>
             )
       }
     }
 
-function mapStateToProps(state){
-  return state
-}
-function mapDispatchToProps(dispatch){
-  return bindActionCreators({
-          newUser:newUser
-          }, dispatch)
-}
-export default connect(mapStateToProps,mapDispatchToProps)(Signup)
+export default (Signup)

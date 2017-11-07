@@ -9,8 +9,10 @@ class Menu extends React.Component{
     if(autenticationStatus){//the way response comes of user is in string I can change this to JSON response in the future
       return(
         <Nav pullRight>
-          <NavItem eventKey={3} href="/">Home</NavItem>
-          <NavItem eventKey={4} href="/logout">Logout @ {this.props.user.user.userEmail}</NavItem>
+          <NavItem eventKey={2} href="/">Home</NavItem>
+          <NavItem eventKey={3} href="/mybooks">My Books</NavItem>
+          <NavItem eventKey={4} href="/profileadd">Profile</NavItem>
+          <NavItem eventKey={5} href="/logout">Logout @ {this.props.user.user.userEmail}</NavItem>
         </Nav>
       )
     }

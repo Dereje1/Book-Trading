@@ -16,6 +16,8 @@ import Home from './components/home'
 import About from './components/about'
 import Signup from './components/signup'
 import Login from './components/login'
+import Profile from './components/profile'
+import Books from './components/books'
 //import combined reducer to pass to store here
 import reducers from './reducers/index'
 
@@ -32,6 +34,8 @@ const Routes = (
       <IndexRoute component={Home}/>
       <Route path="/signup" component={Signup}/>
       <Route path="/login" component={Login}/>
+      <Route path="/profileadd" component={Profile}/>
+      <Route path="/mybooks" component={Books}/>
       <Route path="/about" component={About}/>
     </Route>
   </Router>

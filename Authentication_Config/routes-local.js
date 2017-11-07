@@ -19,7 +19,8 @@ module.exports = function(app, passport) {
       res.json({
                 authenticated: true,
                 userip: ip,
-                userEmail: req.user.local.email
+                userEmail: req.user.local.email,
+                userID:req.user._id
             });
     });
 
@@ -30,13 +31,6 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
-    // =====================================
-    // LOGIN ===============================
-    // =====================================
-
-    // process the login form
-    // app.post('/login', do all our passport stuff here);
-
     // =====================================
     // SIGNUP ==============================
     // =====================================
@@ -76,7 +70,6 @@ module.exports = function(app, passport) {
        }
      })(req, res, next);
    });
-
 };
 
 // route middleware, the main function that checks if a user is logged in
@@ -94,6 +87,7 @@ function isLoggedIn(req, res, next) {
     res.json({
       authenticated: false,
       userip: ip,
-      userEmail: null
+      userEmail: null,
+      userID:null
     });
 }

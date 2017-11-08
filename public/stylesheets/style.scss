@@ -3,7 +3,26 @@ $a-tags: 'a, a:active, a:hover, a:visited, a:active, a:hover';
 
 body{
   margin-top:50px;
-
+  #bookshelf{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    .bookframe{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height:300px;
+      width:300px;
+      margin-top: 10px;
+      padding-top: 10px;
+      background: blue;
+      .booktitle{
+        align-self: center;
+      }
+    }
+  }
   #{$a-tags} {
     color: yellow;
     text-decoration: none;

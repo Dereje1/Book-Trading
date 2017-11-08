@@ -7,12 +7,14 @@ import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-b
 
 import {addBook} from '../actions/bookactions'
 import Info from './infomodal'
+import Bookview from './displaybooks'
 
 class Books extends React.Component{
     constructor(props){
       super(props);
       this.state = {
         booksearch:[],
+        addedBook:[],
         message:""//client interaction message
       }
     }
@@ -63,8 +65,10 @@ class Books extends React.Component{
          requested:  "",
          timestamp:  Date.now()
       }
-      addBook(storeBookInfo)
 
+      this.setState({
+        addedBook:[storeBookInfo]
+      },()=>addBook(storeBookInfo))
     }
     render(){
        if(this.props.user.user.userID){
@@ -86,6 +90,9 @@ class Books extends React.Component{
                       </FormControl>
                     </FormGroup>
                      <Button block bsStyle="warning" type="submit" onClick={this.addBook.bind(this)}>Add Book</Button>
+                   </Col>
+                   <Col xs={12} md={6}>
+                      <Bookview newBook={this.state.addedBook} user={this.props.user.user.userEmail}/>
                    </Col>
                  </Row>
                  <Info message={this.state.message}/>

@@ -2,6 +2,29 @@ body {
   margin-top: 50px;
 }
 
+body #bookshelf {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+body #bookshelf .bookframe {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 300px;
+  width: 300px;
+  margin-top: 10px;
+  padding-top: 10px;
+  background: blue;
+}
+
+body #bookshelf .bookframe .booktitle {
+  align-self: center;
+}
+
 body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {
   color: yellow;
   text-decoration: none;

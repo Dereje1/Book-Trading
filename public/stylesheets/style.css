@@ -6,23 +6,43 @@ body #bookshelf {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 }
 
 body #bookshelf .bookframe {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   justify-content: space-around;
+  align-items: center;
   height: 300px;
-  width: 300px;
+  width: 250px;
   margin-top: 10px;
   padding-top: 10px;
-  background: blue;
+  background: #1b1c1c;
 }
 
 body #bookshelf .bookframe .booktitle {
   align-self: center;
+}
+
+body #bookshelf .bookframe .delete {
+  font-size: 30px;
+  color: red;
+  cursor: pointer;
+}
+
+body #bookshelf .bookframe .trade {
+  font-size: 30px;
+  color: #fcc650;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 520px) {
+  body #bookshelf {
+    justify-content: center;
+  }
 }
 
 body a, body a:active, body a:hover, body a:visited, body a:active, body a:hover {

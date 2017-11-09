@@ -85,6 +85,15 @@ app.get('/:user',function(req,res){
     res.json(book)
   })
 })
+app.delete('/:_id', function(req,res){
+  var query = {_id: req.params._id};
+  books.remove(query, function(err, book){
+    if(err){
+    throw err;
+    }
+    res.json(book);
+  })
+})
 //APIs end
 app.listen(3001,function(err){
   if(err){

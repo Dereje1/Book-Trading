@@ -50016,14 +50016,14 @@ var Home = function (_Component) {
     key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        _reactBootstrap.Row,
+        'div',
         { className: 'text-center' },
         _react2.default.createElement(
           'h1',
           null,
           ' All Books In Circulation'
         ),
-        _react2.default.createElement(_displaybooks2.default, { newBook: [], user: 'All' })
+        _react2.default.createElement(_displaybooks2.default, { newBook: [], viewType: 'All' })
       );
     }
   }]);
@@ -50755,8 +50755,8 @@ var Books = function (_React$Component) {
       var formattedSearch = this.state.booksearch.map(function (b, idx) {
         return _react2.default.createElement(
           'option',
-          { key: idx, value: b[1] },
-          b[0]
+          { key: idx, value: JSON.stringify(b) },
+          b[0].title
         );
       });
       return formattedSearch;
@@ -50785,7 +50785,7 @@ var Books = function (_React$Component) {
       this.timerID = setTimeout(function () {
         _axios2.default.get(urlBuild).then(function (response) {
           var parsedData = response.data.items.map(function (b) {
-            return [b.volumeInfo.title, b.id];
+            return [b.volumeInfo, b.id];
           });
           _this2.setState({
             booksearch: parsedData
@@ -50799,14 +50799,18 @@ var Books = function (_React$Component) {
     key: 'addBook',
     value: function addBook() {
       //handle info from the form
-      var bookId = (0, _reactDom.findDOMNode)(this.refs.selection).value.trim();
-      console.log(bookId);
+      var book = (0, _reactDom.findDOMNode)(this.refs.selection).value;
+      book = JSON.parse(book);
+      console.log(book);
       var storeBookInfo = {
         user: this.props.user.user.userEmail,
-        volumeid: bookId,
+        volumeid: book[1],
         traded: false,
         requested: "",
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        imgLink: book[0].imageLinks.thumbnail,
+        previewLink: book[0].previewLink,
+        bookTitle: book[0].title
       };
 
       this.setState({
@@ -50870,7 +50874,7 @@ var Books = function (_React$Component) {
             _react2.default.createElement(
               _reactBootstrap.Col,
               { xs: 12, md: 6 },
-              _react2.default.createElement(_displaybooks2.default, { newBook: this.state.addedBook, user: this.props.user.user.userEmail })
+              _react2.default.createElement(_displaybooks2.default, { newBook: this.state.addedBook, viewType: 'user' })
             )
           ),
           _react2.default.createElement(_infomodal2.default, { message: this.state.message })
@@ -50917,6 +50921,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.addBook = addBook;
 exports.getBooks = getBooks;
+exports.deleteBook = deleteBook;
 
 var _axios = __webpack_require__(56);
 
@@ -50944,6 +50949,16 @@ function getBooks(query) {
   });
 }
 
+function deleteBook(query) {
+  return new Promise(function (resolve, reject) {
+    _axios2.default.delete('/api/' + query).then(function (response) {
+      resolve(response.data);
+    }).catch(function (err) {
+      reject(err.data);
+    });
+  });
+}
+
 /***/ }),
 /* 423 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -50961,11 +50976,19 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(46);
+
 var _reactBootstrap = __webpack_require__(26);
 
 var _axios = __webpack_require__(56);
 
 var _axios2 = _interopRequireDefault(_axios);
+
+var _bookactions = __webpack_require__(422);
+
+var _bookcontrol = __webpack_require__(426);
+
+var _bookcontrol2 = _interopRequireDefault(_bookcontrol);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50986,8 +51009,7 @@ var Bookview = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Bookview.__proto__ || Object.getPrototypeOf(Bookview)).call(this, props));
 
     _this.state = {
-      booksList: [],
-      booksDetail: []
+      booksList: []
     };
     return _this;
   }
@@ -50997,10 +51019,11 @@ var Bookview = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _axios2.default.get('/api/' + this.props.user).then(function (response) {
+      var dbpath = this.props.viewType === "All" ? "All" : this.props.user.user.userEmail;
+      _axios2.default.get('/api/' + dbpath).then(function (response) {
         _this2.setState({
           booksList: response.data
-        }, _this2.getBookDetails);
+        });
       }).catch(function (err) {
         console.log(err);
       });
@@ -51013,58 +51036,93 @@ var Bookview = function (_Component) {
         var bookListCopy = JSON.parse(JSON.stringify(this.state.booksList));
         bookListCopy = [].concat(_toConsumableArray(bookListCopy), _toConsumableArray(this.props.newBook));
         this.setState({
-          booksList: bookListCopy,
-          booksDetail: []
-        }, this.getBookDetails);
+          booksList: bookListCopy
+        });
       }
-    }
-  }, {
-    key: 'getBookDetails',
-    value: function getBookDetails() {
-      var _this3 = this;
-
-      clearTimeout(this.pauseID);
-      this.state.booksList.forEach(function (b, idx) {
-        //seacrh google by volume
-        _this3.pauseID = setTimeout(function () {
-          var volurl = "https://www.googleapis.com/books/v1/volumes/" + b.volumeid;
-          _axios2.default.get(volurl).then(function (response) {
-            var detailObject = {
-              imgLink: response.data.volumeInfo.imageLinks.thumbnail,
-              previewLink: response.data.volumeInfo.previewLink,
-              bookTitle: response.data.volumeInfo.title
-            };
-            var detailCopy = JSON.parse(JSON.stringify(_this3.state.booksDetail));
-            detailCopy = [].concat(_toConsumableArray(detailCopy), [detailObject]);
-            _this3.setState({
-              booksDetail: detailCopy
-            });
-          }).catch(function (err) {
-            console.log(err);
-          });
-        }, idx * 500);
-      });
     }
   }, {
     key: 'booksDisplay',
     value: function booksDisplay() {
-      var allDisplay = this.state.booksDetail.map(function (b, idx) {
+      var _this3 = this;
+
+      var allDisplay = this.state.booksList.map(function (b, idx) {
+        var booktitle = void 0,
+            tooltip = void 0,
+            owner = void 0;
+        if (b.bookTitle.length > 20) {
+          tooltip = _react2.default.createElement(
+            _reactBootstrap.Tooltip,
+            { id: 'tooltip' },
+            _react2.default.createElement(
+              'strong',
+              null,
+              b.bookTitle
+            )
+          );
+          booktitle = b.bookTitle.substr(0, 20) + "...";
+        } else {
+          tooltip = _react2.default.createElement(
+            _reactBootstrap.Tooltip,
+            { id: 'tooltip' },
+            _react2.default.createElement('strong', null)
+          );
+          booktitle = b.bookTitle;
+        }
+        owner = b.user === _this3.props.user.user.userEmail ? true : false;
+
         return _react2.default.createElement(
           'div',
-          { key: idx, className: 'bookframe', xs: 6 },
+          { key: idx, className: 'bookframe' },
           _react2.default.createElement(
             'a',
             { href: b.previewLink, target: '_blank' },
             _react2.default.createElement('img', { className: 'bookimg', src: b.imgLink })
           ),
+          _react2.default.createElement(_bookcontrol2.default, {
+            status: _this3.props.viewType,
+            isOwner: owner,
+            onDelete: function onDelete() {
+              return _this3.removeBook(b._id);
+            },
+            onTrade: function onTrade() {
+              return _this3.tradeBook(b);
+            }
+          }),
           _react2.default.createElement(
-            'h5',
-            { className: 'booktitle' },
-            b.bookTitle
+            _reactBootstrap.OverlayTrigger,
+            { placement: 'bottom', overlay: tooltip },
+            _react2.default.createElement(
+              'h5',
+              { className: 'booktitle' },
+              booktitle
+            )
           )
         );
       });
       return allDisplay;
+    }
+  }, {
+    key: 'removeBook',
+    value: function removeBook(dbID) {
+      console.log(dbID, " Is ready to be deleted");
+      var bookListCopy = JSON.parse(JSON.stringify(this.state.booksList));
+      var indexOfDeletion = bookListCopy.findIndex(function (b) {
+        return b._id === dbID;
+      });
+      bookListCopy = [].concat(_toConsumableArray(bookListCopy.slice(0, indexOfDeletion)), _toConsumableArray(bookListCopy.slice(indexOfDeletion + 1)));
+      this.setState({
+        booksList: bookListCopy
+      }, function () {
+        return (0, _bookactions.deleteBook)(dbID);
+      });
+    }
+  }, {
+    key: 'tradeBook',
+    value: function tradeBook(dbID) {
+      if (!this.props.user.user.userID) {
+        window.location = '/login';
+      }
+      console.log(dbID);
     }
   }, {
     key: 'render',
@@ -51081,7 +51139,10 @@ var Bookview = function (_Component) {
   return Bookview;
 }(_react.Component);
 
-exports.default = Bookview;
+function mapStateToProps(state) {
+  return state;
+}
+exports.default = (0, _reactRedux.connect)(mapStateToProps)(Bookview);
 
 /***/ }),
 /* 424 */
@@ -51127,6 +51188,99 @@ function userStatusReducer() {
   }
   return state;
 }
+
+/***/ }),
+/* 426 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(26);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Controlpanel = function (_Component) {
+  _inherits(Controlpanel, _Component);
+
+  function Controlpanel() {
+    _classCallCheck(this, Controlpanel);
+
+    return _possibleConstructorReturn(this, (Controlpanel.__proto__ || Object.getPrototypeOf(Controlpanel)).apply(this, arguments));
+  }
+
+  _createClass(Controlpanel, [{
+    key: 'render',
+    value: function render() {
+      var cp = void 0,
+          tooltip = void 0;
+      if (this.props.status !== "All") {
+        tooltip = _react2.default.createElement(
+          _reactBootstrap.Tooltip,
+          { id: 'tooltip' },
+          _react2.default.createElement(
+            'strong',
+            null,
+            'Delete Book'
+          )
+        );
+        cp = _react2.default.createElement(
+          _reactBootstrap.OverlayTrigger,
+          { placement: 'bottom', overlay: tooltip },
+          _react2.default.createElement(
+            'span',
+            { onClick: this.props.onDelete },
+            _react2.default.createElement('i', { className: 'fa fa-times delete', 'aria-hidden': 'true' })
+          )
+        );
+      } else if (this.props.status === "All" && !this.props.isOwner) {
+        tooltip = _react2.default.createElement(
+          _reactBootstrap.Tooltip,
+          { id: 'tooltip' },
+          _react2.default.createElement(
+            'strong',
+            null,
+            'Trade Book'
+          )
+        );
+        cp = _react2.default.createElement(
+          _reactBootstrap.OverlayTrigger,
+          { placement: 'bottom', overlay: tooltip },
+          _react2.default.createElement(
+            'span',
+            { onClick: this.props.onTrade },
+            _react2.default.createElement('i', { className: 'fa fa-exchange trade', 'aria-hidden': 'true' })
+          )
+        );
+      }
+      return _react2.default.createElement(
+        'div',
+        null,
+        cp
+      );
+    }
+  }]);
+
+  return Controlpanel;
+}(_react.Component);
+
+exports.default = Controlpanel;
 
 /***/ })
 /******/ ]);

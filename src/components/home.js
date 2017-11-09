@@ -6,10 +6,10 @@ class Home extends Component {
 
   render() {
     return (
-      <Row className="text-center">
+      <div className="text-center">
         <h1> All Books In Circulation</h1>
-        <Bookview newBook={[]} user="All"/>
-      </Row>
+        <Bookview newBook={[]} viewType="All"/>
+      </div>
     );
   }
 

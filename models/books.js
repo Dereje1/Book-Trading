@@ -6,7 +6,10 @@ var bookschema = mongoose.Schema({
    volumeid:   String,
    traded:     Boolean,
    requested:  String,
-   timestamp:  String
+   timestamp:  String,
+   imgLink : String,
+   previewLink: String,
+   bookTitle : String
 });
 
 //exported = mongoose.model(collectionName,Schema);

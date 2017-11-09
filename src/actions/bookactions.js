@@ -24,3 +24,15 @@ export function getBooks(query){
     })
   })
 }
+
+export function deleteBook(query){
+  return new Promise((resolve,reject)=>{
+    axios.delete('/api/'+query)
+    .then((response)=>{
+      resolve(response.data)
+    })
+    .catch((err)=>{
+      reject(err.data)
+    })
+  })
+}

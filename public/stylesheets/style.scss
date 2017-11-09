@@ -7,20 +7,38 @@ body{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
+
     .bookframe{
       display: flex;
       flex-direction: column;
+      flex-wrap: wrap;
       justify-content: space-around;
+      align-items: center;
       height:300px;
-      width:300px;
+      width:250px;
       margin-top: 10px;
       padding-top: 10px;
-      background: blue;
+      background: #1b1c1c;
       .booktitle{
         align-self: center;
       }
+      .delete{
+        font-size: 30px;
+        color:red;
+        cursor: pointer;
+      }
+      .trade{
+        font-size: 30px;
+        color:#fcc650;
+        cursor: pointer;
+      }
+    }
+  }
+  @media screen and (max-width: 520px){
+    #bookshelf{
+      justify-content: center;
     }
   }
   #{$a-tags} {

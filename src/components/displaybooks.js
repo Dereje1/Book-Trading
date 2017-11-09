@@ -1,22 +1,27 @@
 "use strict"
 import React, { Component } from 'react';
-import {Col,Image,Button} from 'react-bootstrap'
+import {connect} from 'react-redux';
+import {Col,Tooltip,Button,OverlayTrigger} from 'react-bootstrap'
 import axios from 'axios';
+
+
+import {deleteBook} from '../actions/bookactions'
+import Controlpanel from './bookcontrol'
 
 class Bookview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      booksList:[],
-      booksDetail:[]
+      booksList:[]
     }
   }
   componentDidMount() {
-    axios.get('/api/'+this.props.user)
+    let dbpath = (this.props.viewType==="All") ? "All" : this.props.user.user.userEmail
+    axios.get('/api/'+dbpath)
     .then((response)=>{
       this.setState({
         booksList:response.data
-      },this.getBookDetails)
+      })
     })
     .catch((err)=>{
       console.log(err)
@@ -28,49 +33,60 @@ class Bookview extends Component {
       let bookListCopy = JSON.parse(JSON.stringify(this.state.booksList))
       bookListCopy = [...bookListCopy,...this.props.newBook]
       this.setState({
-        booksList:bookListCopy,
-        booksDetail:[]
-      },this.getBookDetails)
+        booksList:bookListCopy
+      })
     }
-  }
-  getBookDetails(){
-    clearTimeout(this.pauseID)
-    this.state.booksList.forEach((b,idx)=>{
-      //seacrh google by volume
-    this.pauseID = setTimeout(()=>{
-      let volurl = "https://www.googleapis.com/books/v1/volumes/"+b.volumeid
-      axios.get(volurl)
-        .then((response)=>{
-          let detailObject={
-            imgLink : response.data.volumeInfo.imageLinks.thumbnail,
-            previewLink: response.data.volumeInfo.previewLink,
-            bookTitle : response.data.volumeInfo.title
-          }
-          let detailCopy = JSON.parse(JSON.stringify(this.state.booksDetail))
-          detailCopy =[...detailCopy,detailObject]
-          this.setState({
-            booksDetail:detailCopy
-          })
-        })
-        .catch((err)=>{
-          console.log(err)
-        })
-    },idx*500)
-    })
   }
 
   booksDisplay(){
-    let allDisplay = this.state.booksDetail.map((b,idx)=>{
+
+    let allDisplay = this.state.booksList.map((b,idx)=>{
+      let booktitle,tooltip,owner
+      if(b.bookTitle.length>20){
+        tooltip = (<Tooltip id="tooltip"><strong>{b.bookTitle}</strong></Tooltip>);
+        booktitle = b.bookTitle.substr(0,20)+"..."
+      }
+      else{
+        tooltip = (<Tooltip id="tooltip"><strong></strong></Tooltip>);
+        booktitle = b.bookTitle
+      }
+      owner = (b.user===this.props.user.user.userEmail) ? true : false
+      
       return (
-        <div key={idx} className="bookframe" xs={6}>
+        <div key={idx} className="bookframe">
             <a href={b.previewLink} target="_blank">
               <img className="bookimg" src={b.imgLink}/>
             </a>
-            <h5 className="booktitle">{b.bookTitle}</h5>
+            <Controlpanel
+            status={this.props.viewType}
+            isOwner={owner}
+            onDelete={()=>this.removeBook(b._id)}
+            onTrade={()=>this.tradeBook(b)}
+            />
+            <OverlayTrigger placement="bottom" overlay={tooltip}>
+              <h5 className="booktitle">{booktitle}</h5>
+            </OverlayTrigger>
         </div>
       )
     })
     return allDisplay
+  }
+  removeBook(dbID){
+    console.log(dbID," Is ready to be deleted")
+    let bookListCopy = JSON.parse(JSON.stringify(this.state.booksList))
+    let indexOfDeletion = bookListCopy.findIndex((b)=>{
+      return b._id===dbID
+    })
+    bookListCopy =[...bookListCopy.slice(0,indexOfDeletion),...bookListCopy.slice(indexOfDeletion+1)]
+    this.setState({
+      booksList:bookListCopy
+    },()=>deleteBook(dbID))
+  }
+  tradeBook(dbID){
+    if(!this.props.user.user.userID){
+      window.location='/login'
+    }
+    console.log(dbID)
   }
   render() {
 
@@ -81,4 +97,7 @@ class Bookview extends Component {
 
 }
 
-export default Bookview;
+function mapStateToProps(state){
+  return state
+}
+export default connect(mapStateToProps)(Bookview)

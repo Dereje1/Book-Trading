@@ -21,7 +21,7 @@ class Books extends React.Component{
     populateBookSearch(){
       let formattedSearch = this.state.booksearch.map((b,idx)=>{
         return (
-          <option key={idx} value={b[1]}>{b[0]}</option>
+          <option key={idx} value={JSON.stringify(b)}>{b[0].title}</option>
         )
       })
       return formattedSearch
@@ -43,7 +43,7 @@ class Books extends React.Component{
         axios.get(urlBuild)
         .then((response)=>{
           let parsedData = response.data.items.map((b)=>{
-            return [b.volumeInfo.title,b.id]
+            return [b.volumeInfo,b.id]
           })
           this.setState({
             booksearch:parsedData
@@ -56,14 +56,18 @@ class Books extends React.Component{
     }
     addBook(){
       //handle info from the form
-      let bookId = findDOMNode(this.refs.selection).value.trim()
-      console.log(bookId)
+      let book = findDOMNode(this.refs.selection).value
+      book = (JSON.parse(book))
+      console.log(book)
       let storeBookInfo = {
          user:       this.props.user.user.userEmail,
-         volumeid:   bookId,
+         volumeid:   book[1],
          traded:     false,
          requested:  "",
-         timestamp:  Date.now()
+         timestamp:  Date.now(),
+         imgLink : book[0].imageLinks.thumbnail,
+         previewLink: book[0].previewLink,
+         bookTitle : book[0].title
       }
 
       this.setState({
@@ -92,7 +96,7 @@ class Books extends React.Component{
                      <Button block bsStyle="warning" type="submit" onClick={this.addBook.bind(this)}>Add Book</Button>
                    </Col>
                    <Col xs={12} md={6}>
-                      <Bookview newBook={this.state.addedBook} user={this.props.user.user.userEmail}/>
+                      <Bookview newBook={this.state.addedBook} viewType="user"/>
                    </Col>
                  </Row>
                  <Info message={this.state.message}/>

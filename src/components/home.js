@@ -20,7 +20,7 @@ class Home extends Component {
       <div className="text-center">
         <h1 style={{color:"black"}}> All Books In Circulation</h1>
         <Bookview newBook={[]} viewType="All" modalCallback={(m)=>this.doModal(m)}/>
-        <Info message={this.state.message}/>
+        <Info message={this.state.message} reset={()=>this.setState({message:""})}/>
       </div>
     );
   }

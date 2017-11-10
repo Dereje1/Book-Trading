@@ -68,16 +68,6 @@ module.exports = function(app, passport) {
        }
      })(req, res, next);
    });
-
-   app.post('/passchange', function(req, res, next) {
-     passport.authenticate('local-passchange', function(err, user, info) {
-       if (err) {
-         return next(err);
-        }
-
-        return res.json({message:info})
-     })(req, res, next);
-   });
 };
 
 // route middleware, the main function that checks if a user is logged in

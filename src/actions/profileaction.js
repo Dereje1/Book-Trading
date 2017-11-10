@@ -12,3 +12,16 @@ export function updateProfile(profileInfo){
       })
   })
 }
+
+export function getProfile(id){
+  console.log(id)
+  return new Promise((resolve,reject)=>{
+    axios.get('/api/updateprofile/'+id)
+      .then((response)=>{
+        resolve(response.data)
+      })
+      .catch((err)=>{
+        reject(err.data)
+      })
+  })
+}

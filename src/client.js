@@ -35,6 +35,7 @@ const Routes = (
       <Route path="/signup" component={Signup}/>
       <Route path="/login" component={Login}/>
       <Route path="/profileadd" component={Profile}/>
+      <Route path="/passchange" component={Profile}/>
       <Route path="/mybooks" component={Books}/>
       <Route path="/about" component={About}/>
     </Route>

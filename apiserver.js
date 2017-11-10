@@ -53,7 +53,7 @@ app.put('/updateprofile/:_id', function(req, res){
        })
      }
      else{
-       var update = { '$set': {city: profileToUpdate.city, state: profileToUpdate.state}};
+       var update = { '$set': {fullName:profileToUpdate.fullName,city: profileToUpdate.city, state: profileToUpdate.state}};
        var modified = {new: true};
        profiles.findByIdAndUpdate(profileID, update, modified, function(err, profile){
            if(err){
@@ -64,6 +64,16 @@ app.put('/updateprofile/:_id', function(req, res){
      }
    })
 
+})
+app.get('/updateprofile/:_id', function(req, res){
+   var query = {_id: req.params._id};
+
+   profiles.find(query,function(err,profile){
+     if(err){
+       res.json (err) ;
+     }
+     res.json(profile)
+   })
 })
 
 app.post('/newbook',function(req,res){

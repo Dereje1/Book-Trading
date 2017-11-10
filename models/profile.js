@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var profileschema = mongoose.Schema({
    _id:   String,
+   fullName:String,
    city:  String,
    state: String
 });

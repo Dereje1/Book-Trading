@@ -41,3 +41,15 @@ export function checkUser(logininfo){
       })
   })
 }
+
+export function newPass(signupinfo){
+  return new Promise(function(resolve,reject){
+    axios.post('/passchange',signupinfo)
+      .then(function(response){
+        resolve(response.data)
+      })
+      .catch(function(err){
+        reject(err)
+      })
+  })
+}

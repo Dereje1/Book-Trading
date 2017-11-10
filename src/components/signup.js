@@ -42,7 +42,7 @@ class Signup extends React.Component{
                       <h3> Sign Up </h3>
                     </div>
                     <FormGroup controlId="formControlsUsername" type="text" >
-                      <ControlLabel>Email</ControlLabel>
+                      <ControlLabel>Username</ControlLabel>
                       <FormControl ref="uname" placeholder="Enter Username"/>
                     </FormGroup>
                     <FormGroup controlId="formControlsPass" type="text" >

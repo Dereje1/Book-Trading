@@ -85,7 +85,6 @@ module.exports = function(passport) {
        passReqToCallback : true // allows us to pass back the entire request to the callback
    },
    function(req, username, password, done) { // callback with email and password from our form
-
        // find a user whose email is the same as the forms email
        // we are checking to see if the user trying to login already exists
        User.findOne({ 'local.username' :  username }, function(err, user) {
@@ -107,4 +106,46 @@ module.exports = function(passport) {
 
    }));
 
+
+   //startegy to change password
+
+  passport.use('local-passchange', new LocalStrategy({
+      passReqToCallback : true // allows us to pass back the entire request to the callback
+  },
+  function(req, username, password, done) { // callback with email and password from our form
+      console.log(req.body)
+
+
+      User.findOne({ 'local.username' :  username }, function(err, user) {
+          // if there are any errors, return the error before anything else
+          if (err)
+              return done(err);
+
+          // if no user is found, return the message
+          if (!user)
+              return done(null, false, 'No user found!'); // req.flash is the way to set flashdata using connect-flash
+
+          // if the user is found but the password is wrong
+          if (!user.validPassword(password)){
+            return done(null, user, 'Your old password is wrong - Not Updated!'); // create the loginMessage and save it to session as flashdata
+          }
+
+          let newHash = User().generateHash(req.body.newPassword)
+
+          let update = { '$set': {local:{username:user.local.username,password: newHash}}}
+
+          User.findByIdAndUpdate(user._id, update, function(err, user){
+              if(err){
+                console.log("error updating")
+                throw err;
+              }
+          })
+
+          // all is well, return successful user
+          return done(null, user,'Password Changed!');
+      });
+
+      //dummy return
+      //return done(null, false);
+  }));
 };

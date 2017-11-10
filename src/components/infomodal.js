@@ -12,10 +12,11 @@ class Info extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevProps.message!==this.props.message){//only show if new message in state (home)
-      this.setState({show:true})
+    if((prevProps.message!==this.props.message)&&(this.props.message.length)){//only show if new message in state (home)
+      this.setState({
+        show:true
+      })
     }
-      //
   }
   open(){
   this.setState({
@@ -23,10 +24,9 @@ class Info extends Component {
   })
   }
   close(){
-    //when modal is closed reset back to original state
     this.setState({
       show: false
-    });
+    },()=>this.props.reset());
   }
   render() {
     return (

@@ -34,7 +34,6 @@ class Login extends React.Component{
       })
     }
     render(){
-       console.log(this.props)
         return(
               <Grid>
                 <Row>
@@ -53,7 +52,7 @@ class Login extends React.Component{
                     <Button block bsStyle="warning" type="submit" onClick={this.handleLogin.bind(this)}>Login</Button>
                   </Col>
                 </Row>
-                <Info message={this.state.message}/>
+                <Info message={this.state.message} reset={()=>this.setState({message:""})}/>
               </Grid>
             )
       }

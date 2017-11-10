@@ -15,15 +15,14 @@ class Login extends React.Component{
     }
     handleLogin(){
       //handle info from the form
-      let email = findDOMNode(this.refs.email).value.trim()
+      let user = findDOMNode(this.refs.uname).value.trim()
       let pass = findDOMNode(this.refs.pass).value.trim()
       let logininfo={
-        email:email,
+        username:user,
         password:pass
       }
       checkUser(logininfo).then((response)=>{
         if(response.status==="error"){
-          console.log(this.state.message)
           this.setState({message:response.message})
         }
         else{
@@ -43,9 +42,9 @@ class Login extends React.Component{
                     <div className="text-center">
                       <h3> Login </h3>
                     </div>
-                    <FormGroup controlId="formControlsEmail" type="text" >
-                      <ControlLabel>Email</ControlLabel>
-                      <FormControl ref="email" placeholder="Email"/>
+                    <FormGroup controlId="formControlsUsername" type="text" >
+                      <ControlLabel>Username</ControlLabel>
+                      <FormControl ref="uname" placeholder="Username"/>
                     </FormGroup>
                     <FormGroup controlId="formControlsPass" type="text" >
                       <ControlLabel>Password</ControlLabel>

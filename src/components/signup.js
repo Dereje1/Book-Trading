@@ -15,10 +15,10 @@ class Signup extends React.Component{
     }
     handleNewSignUp(){
       //handle info from the form
-      let email = findDOMNode(this.refs.email).value.trim()
+      let user = findDOMNode(this.refs.uname).value.trim()
       let pass = findDOMNode(this.refs.pass).value.trim()
       let signupinfo={
-        username:email,
+        username:user,
         password:pass
       }
       newUser(signupinfo).then((response)=>{
@@ -41,9 +41,9 @@ class Signup extends React.Component{
                     <div className="text-center">
                       <h3> Sign Up </h3>
                     </div>
-                    <FormGroup controlId="formControlsEmail" type="text" >
+                    <FormGroup controlId="formControlsUsername" type="text" >
                       <ControlLabel>Email</ControlLabel>
-                      <FormControl ref="email" placeholder="Enter Valid Email"/>
+                      <FormControl ref="uname" placeholder="Enter Username"/>
                     </FormGroup>
                     <FormGroup controlId="formControlsPass" type="text" >
                       <ControlLabel>Password</ControlLabel>

@@ -50708,10 +50708,10 @@ var Signup = function (_React$Component) {
       var _this2 = this;
 
       //handle info from the form
-      var email = (0, _reactDom.findDOMNode)(this.refs.email).value.trim();
+      var user = (0, _reactDom.findDOMNode)(this.refs.uname).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
       var signupinfo = {
-        username: email,
+        username: user,
         password: pass
       };
       (0, _authentication.newUser)(signupinfo).then(function (response) {
@@ -50747,13 +50747,13 @@ var Signup = function (_React$Component) {
             ),
             _react2.default.createElement(
               _reactBootstrap.FormGroup,
-              { controlId: 'formControlsEmail', type: 'text' },
+              { controlId: 'formControlsUsername', type: 'text' },
               _react2.default.createElement(
                 _reactBootstrap.ControlLabel,
                 null,
                 'Email'
               ),
-              _react2.default.createElement(_reactBootstrap.FormControl, { ref: 'email', placeholder: 'Enter Valid Email' })
+              _react2.default.createElement(_reactBootstrap.FormControl, { ref: 'uname', placeholder: 'Enter Username' })
             ),
             _react2.default.createElement(
               _reactBootstrap.FormGroup,
@@ -50837,15 +50837,14 @@ var Login = function (_React$Component) {
       var _this2 = this;
 
       //handle info from the form
-      var email = (0, _reactDom.findDOMNode)(this.refs.email).value.trim();
+      var user = (0, _reactDom.findDOMNode)(this.refs.uname).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
       var logininfo = {
-        email: email,
+        username: user,
         password: pass
       };
       (0, _authentication.checkUser)(logininfo).then(function (response) {
         if (response.status === "error") {
-          console.log(_this2.state.message);
           _this2.setState({ message: response.message });
         } else {
           window.location = "/";
@@ -50878,13 +50877,13 @@ var Login = function (_React$Component) {
             ),
             _react2.default.createElement(
               _reactBootstrap.FormGroup,
-              { controlId: 'formControlsEmail', type: 'text' },
+              { controlId: 'formControlsUsername', type: 'text' },
               _react2.default.createElement(
                 _reactBootstrap.ControlLabel,
                 null,
-                'Email'
+                'Username'
               ),
-              _react2.default.createElement(_reactBootstrap.FormControl, { ref: 'email', placeholder: 'Email' })
+              _react2.default.createElement(_reactBootstrap.FormControl, { ref: 'uname', placeholder: 'Username' })
             ),
             _react2.default.createElement(
               _reactBootstrap.FormGroup,

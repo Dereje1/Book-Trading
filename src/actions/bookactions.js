@@ -36,3 +36,15 @@ export function deleteBook(query){
     })
   })
 }
+
+export function tradeRequest(query,trader){
+  return new Promise((resolve,reject)=>{
+    axios.put('/api/'+query,trader)
+    .then((response)=>{
+      resolve(response.data)
+    })
+    .catch((err)=>{
+      reject(err.data)
+    })
+  })
+}

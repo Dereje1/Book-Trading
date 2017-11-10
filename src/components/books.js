@@ -8,13 +8,14 @@ import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-b
 import {addBook} from '../actions/bookactions'
 import Info from './infomodal'
 import Bookview from './displaybooks'
-
+import Trades from './tradesdashboard'
 class Books extends React.Component{
     constructor(props){
       super(props);
       this.state = {
         booksearch:[],
         addedBook:[],
+        swappingId:"",
         message:""//client interaction message
       }
     }
@@ -60,7 +61,7 @@ class Books extends React.Component{
       book = (JSON.parse(book))
       console.log(book)
       let storeBookInfo = {
-         user:       this.props.user.user.userEmail,
+         owner:       this.props.user.user.userEmail,
          volumeid:   book[1],
          traded:     false,
          requested:  "",
@@ -74,6 +75,11 @@ class Books extends React.Component{
         addedBook:[storeBookInfo]
       },()=>addBook(storeBookInfo))
     }
+    swapping(sID){
+      this.setState({
+        swappingId:sID
+      })
+    }
     render(){
        if(this.props.user.user.userID){
          return(
@@ -81,7 +87,7 @@ class Books extends React.Component{
                  <Row>
                    <Col xs={12} md={6}>
                      <div className="text-center">
-                       <h3> My Books </h3>
+                       <h3>Search and Add Books</h3>
                      </div>
                      <FormGroup controlId="formBookAdd" type="text" >
                        <ControlLabel>Search Google Books</ControlLabel>
@@ -94,9 +100,16 @@ class Books extends React.Component{
                       </FormControl>
                     </FormGroup>
                      <Button block bsStyle="warning" type="submit" onClick={this.addBook.bind(this)}>Add Book</Button>
+                       <div className="text-center">
+                         <h3>Trade DashBoard </h3>
+                       </div>
+                     <Trades currentUser={this.props.user.user.userEmail} swapped={(s)=>this.swapping(s)}/>
                    </Col>
                    <Col xs={12} md={6}>
-                      <Bookview newBook={this.state.addedBook} viewType="user"/>
+                       <div className="text-center">
+                         <h3> My Books </h3>
+                       </div>
+                      <Bookview newBook={this.state.addedBook} viewType="user" swap={this.state.swappingId}/>
                    </Col>
                  </Row>
                  <Info message={this.state.message}/>

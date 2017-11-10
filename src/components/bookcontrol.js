@@ -13,12 +13,23 @@ class Controlpanel extends Component {
       )
     }
     else if (this.props.status==="All" && !this.props.isOwner){
-      tooltip = (<Tooltip id="tooltip"><strong>Trade Book</strong></Tooltip>);
-      cp=(
-        <OverlayTrigger placement="bottom" overlay={tooltip}>
-          <span onClick={this.props.onTrade}><i className="fa fa-exchange trade" aria-hidden="true"></i></span>
-        </OverlayTrigger>
-      )
+
+      if(this.props.isRequested){
+        tooltip = (<Tooltip id="tooltip"><strong>Trade Pending</strong></Tooltip>);
+        cp=(
+          <OverlayTrigger placement="top" overlay={tooltip}>
+            <span onClick={this.props.onTrade}><i className="fa fa-exchange trade-requested" aria-hidden="true"></i></span>
+          </OverlayTrigger>
+        )
+      }
+      else{
+        tooltip = (<Tooltip id="tooltip"><strong>Request a Trade</strong></Tooltip>);
+        cp=(
+          <OverlayTrigger placement="top" overlay={tooltip}>
+            <span onClick={this.props.onTrade}><i className="fa fa-exchange trade" aria-hidden="true"></i></span>
+          </OverlayTrigger>
+        )
+      }
     }
     return (
       <div>{cp}</div>

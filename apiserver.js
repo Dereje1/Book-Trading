@@ -77,7 +77,7 @@ app.post('/newbook',function(req,res){
 })
 app.get('/:user',function(req,res){
   let userName = req.params.user
-  let query = (userName==="All") ? {} : {user: userName};
+  let query = (userName==="All") ? {} : {owner: userName};
   books.find(query,function(err,book){
     if(err){
       res.json (err) ;
@@ -93,6 +93,23 @@ app.delete('/:_id', function(req,res){
     }
     res.json(book);
   })
+})
+
+app.put('/:_id', function(req, res){
+   var infoToUpdate = req.body;
+   var pollID = req.params._id;
+   // if the field doesn't exist $set will set a new field
+   // change to findByIdAndUpdate to make it congruent with delete
+
+   let update = infoToUpdate.owner ? { '$set': {requested: infoToUpdate.requested, owner:infoToUpdate.owner}} : { '$set': {requested: infoToUpdate.requested}}
+   // When true returns the updated document
+   var modified = {new: true};
+   books.findByIdAndUpdate(pollID, update, modified, function(err, book){
+       if(err){
+         throw err;
+       }
+       res.json(book);
+   })
 })
 //APIs end
 app.listen(3001,function(err){

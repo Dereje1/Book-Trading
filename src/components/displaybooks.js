@@ -5,7 +5,7 @@ import {Col,Tooltip,Button,OverlayTrigger} from 'react-bootstrap'
 import axios from 'axios';
 
 
-import {deleteBook} from '../actions/bookactions'
+import {deleteBook,tradeRequest} from '../actions/bookactions'
 import Controlpanel from './bookcontrol'
 
 class Bookview extends Component {
@@ -17,6 +17,7 @@ class Bookview extends Component {
   }
   componentDidMount() {
     let dbpath = (this.props.viewType==="All") ? "All" : this.props.user.user.userEmail
+
     axios.get('/api/'+dbpath)
     .then((response)=>{
       this.setState({
@@ -26,6 +27,7 @@ class Bookview extends Component {
     .catch((err)=>{
       console.log(err)
     })
+
   }
   componentDidUpdate(prevProps, prevState) {
     //console.log(prevProps.newBook[0],this.props.newBook[0])
@@ -36,12 +38,22 @@ class Bookview extends Component {
         booksList:bookListCopy
       })
     }
+    if(prevProps.swap!==this.props.swap){
+      let bookListCopy = JSON.parse(JSON.stringify(this.state.booksList))
+      let indexOfDeletion = bookListCopy.findIndex((b)=>{
+        return (b._id===this.props.swap)
+      })
+      bookListCopy=[...bookListCopy.slice(0,indexOfDeletion),...bookListCopy.slice(indexOfDeletion+1)]
+      this.setState({
+        booksList:bookListCopy
+      })
+    }
   }
 
   booksDisplay(){
 
     let allDisplay = this.state.booksList.map((b,idx)=>{
-      let booktitle,tooltip,owner
+      let booktitle,tooltip,owner,requested
       if(b.bookTitle.length>20){
         tooltip = (<Tooltip id="tooltip"><strong>{b.bookTitle}</strong></Tooltip>);
         booktitle = b.bookTitle.substr(0,20)+"..."
@@ -50,8 +62,8 @@ class Bookview extends Component {
         tooltip = (<Tooltip id="tooltip"><strong></strong></Tooltip>);
         booktitle = b.bookTitle
       }
-      owner = (b.user===this.props.user.user.userEmail) ? true : false
-      
+      owner = (b.owner===this.props.user.user.userEmail) ? true : false
+      requested = (b.requested.length) ? true : false
       return (
         <div key={idx} className="bookframe">
             <a href={b.previewLink} target="_blank">
@@ -60,6 +72,7 @@ class Bookview extends Component {
             <Controlpanel
             status={this.props.viewType}
             isOwner={owner}
+            isRequested={requested}
             onDelete={()=>this.removeBook(b._id)}
             onTrade={()=>this.tradeBook(b)}
             />
@@ -82,11 +95,22 @@ class Bookview extends Component {
       booksList:bookListCopy
     },()=>deleteBook(dbID))
   }
-  tradeBook(dbID){
+  tradeBook(book){
     if(!this.props.user.user.userID){
       window.location='/login'
+      return;
     }
-    console.log(dbID)
+    if(book.requested.length!==0){
+      this.props.modalCallback(book.bookTitle+" is pending another trade request approval")
+      return;
+    }
+    let tradeInfo ={
+      requested:this.props.user.user.userEmail
+    }
+    tradeRequest(book._id,tradeInfo)
+    .then((response)=>{
+      this.props.modalCallback("New Trade request for " + book.bookTitle)
+    })
   }
   render() {
 

@@ -2,7 +2,7 @@
 //mongoose shcema on what to store fror venue goers?
 var mongoose = require('mongoose');
 var bookschema = mongoose.Schema({
-   user:       String,
+   owner:       String,
    volumeid:   String,
    traded:     Boolean,
    requested:  String,

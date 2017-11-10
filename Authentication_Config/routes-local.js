@@ -19,7 +19,7 @@ module.exports = function(app, passport) {
       res.json({
                 authenticated: true,
                 userip: ip,
-                userEmail: req.user.local.email,
+                userName: req.user.local.username,
                 userID:req.user._id
             });
     });
@@ -37,7 +37,6 @@ module.exports = function(app, passport) {
     // show the signup form
     app.post('/signup', function(req, res, next) {
       passport.authenticate('local-signup', function(err, user, info) {
-        console.log(err,user,info)
         if (err) {
           return next(err);
          }
@@ -47,7 +46,7 @@ module.exports = function(app, passport) {
         else{
           req.logIn(user, function(err) {
             if (err) { return next(err); }
-            return res.json({status:'success',message:user.local.email + " Signed Up!"});
+            return res.json({status:'success',message:user.local.username + " Signed Up!"});
           });
         }
       })(req, res, next);
@@ -55,7 +54,6 @@ module.exports = function(app, passport) {
    // process the login form
    app.post('/login', function(req, res, next) {
      passport.authenticate('local-login', function(err, user, info) {
-       console.log(err,user,info)
        if (err) {
          return next(err);
         }
@@ -65,7 +63,7 @@ module.exports = function(app, passport) {
        else{
          req.logIn(user, function(err) {
            if (err) { return next(err); }
-           return res.json({status:'success',message:user.local.email + " logged in!!"});
+           return res.json({status:'success',message:user.local.username + " logged in!!"});
          });
        }
      })(req, res, next);
@@ -87,7 +85,7 @@ function isLoggedIn(req, res, next) {
     res.json({
       authenticated: false,
       userip: ip,
-      userEmail: null,
+      userName: null,
       userID:null
     });
 }

@@ -61,7 +61,7 @@ class Books extends React.Component{
       book = (JSON.parse(book))
       console.log(book)
       let storeBookInfo = {
-         owner:       this.props.user.user.userEmail,
+         owner:       this.props.user.user.userName,
          volumeid:   book[1],
          traded:     false,
          requested:  "",
@@ -103,7 +103,7 @@ class Books extends React.Component{
                        <div className="text-center">
                          <h3>Trade DashBoard </h3>
                        </div>
-                     <Trades currentUser={this.props.user.user.userEmail} swapped={(s)=>this.swapping(s)}/>
+                     <Trades currentUser={this.props.user.user.userName} swapped={(s)=>this.swapping(s)}/>
                    </Col>
                    <Col xs={12} md={6}>
                        <div className="text-center">

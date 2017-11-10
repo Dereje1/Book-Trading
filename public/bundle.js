@@ -12985,7 +12985,7 @@ var Bookview = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      var dbpath = this.props.viewType === "All" ? "All" : this.props.user.user.userEmail;
+      var dbpath = this.props.viewType === "All" ? "All" : this.props.user.user.userName;
 
       _axios2.default.get('/api/' + dbpath).then(function (response) {
         _this2.setState({
@@ -13048,7 +13048,7 @@ var Bookview = function (_Component) {
           );
           booktitle = b.bookTitle;
         }
-        owner = b.owner === _this4.props.user.user.userEmail ? true : false;
+        owner = b.owner === _this4.props.user.user.userName ? true : false;
         requested = b.requested.length ? true : false;
         return _react2.default.createElement(
           'div',
@@ -13111,7 +13111,7 @@ var Bookview = function (_Component) {
         return;
       }
       var tradeInfo = {
-        requested: this.props.user.user.userEmail
+        requested: this.props.user.user.userName
       };
       (0, _bookactions.tradeRequest)(book._id, tradeInfo).then(function (response) {
         _this5.props.modalCallback("New Trade request for " + book.bookTitle);
@@ -38028,7 +38028,7 @@ var Menu = function (_React$Component) {
             _reactBootstrap.NavItem,
             { eventKey: 5, href: '/logout' },
             'Logout @ ',
-            this.props.user.user.userEmail
+            this.props.user.user.userName
           )
         );
       } else {
@@ -50711,7 +50711,7 @@ var Signup = function (_React$Component) {
       var email = (0, _reactDom.findDOMNode)(this.refs.email).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
       var signupinfo = {
-        email: email,
+        username: email,
         password: pass
       };
       (0, _authentication.newUser)(signupinfo).then(function (response) {
@@ -51208,7 +51208,7 @@ var Books = function (_React$Component) {
       book = JSON.parse(book);
       console.log(book);
       var storeBookInfo = {
-        owner: this.props.user.user.userEmail,
+        owner: this.props.user.user.userName,
         volumeid: book[1],
         traded: false,
         requested: "",
@@ -51293,7 +51293,7 @@ var Books = function (_React$Component) {
                   'Trade DashBoard '
                 )
               ),
-              _react2.default.createElement(_tradesdashboard2.default, { currentUser: this.props.user.user.userEmail, swapped: function swapped(s) {
+              _react2.default.createElement(_tradesdashboard2.default, { currentUser: this.props.user.user.userName, swapped: function swapped(s) {
                   return _this3.swapping(s);
                 } })
             ),

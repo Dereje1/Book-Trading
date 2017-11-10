@@ -12,7 +12,7 @@ class Menu extends React.Component{
           <NavItem eventKey={2} href="/">Home</NavItem>
           <NavItem eventKey={3} href="/mybooks">My Books</NavItem>
           <NavItem eventKey={4} href="/profileadd">Profile</NavItem>
-          <NavItem eventKey={5} href="/logout">Logout @ {this.props.user.user.userEmail}</NavItem>
+          <NavItem eventKey={5} href="/logout">Logout @ {this.props.user.user.userName}</NavItem>
         </Nav>
       )
     }

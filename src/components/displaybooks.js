@@ -16,7 +16,7 @@ class Bookview extends Component {
     }
   }
   componentDidMount() {
-    let dbpath = (this.props.viewType==="All") ? "All" : this.props.user.user.userEmail
+    let dbpath = (this.props.viewType==="All") ? "All" : this.props.user.user.userName
 
     axios.get('/api/'+dbpath)
     .then((response)=>{
@@ -62,7 +62,7 @@ class Bookview extends Component {
         tooltip = (<Tooltip id="tooltip"><strong></strong></Tooltip>);
         booktitle = b.bookTitle
       }
-      owner = (b.owner===this.props.user.user.userEmail) ? true : false
+      owner = (b.owner===this.props.user.user.userName) ? true : false
       requested = (b.requested.length) ? true : false
       return (
         <div key={idx} className="bookframe">
@@ -105,7 +105,7 @@ class Bookview extends Component {
       return;
     }
     let tradeInfo ={
-      requested:this.props.user.user.userEmail
+      requested:this.props.user.user.userName
     }
     tradeRequest(book._id,tradeInfo)
     .then((response)=>{

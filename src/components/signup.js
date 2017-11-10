@@ -18,7 +18,7 @@ class Signup extends React.Component{
       let email = findDOMNode(this.refs.email).value.trim()
       let pass = findDOMNode(this.refs.pass).value.trim()
       let signupinfo={
-        email:email,
+        username:email,
         password:pass
       }
       newUser(signupinfo).then((response)=>{

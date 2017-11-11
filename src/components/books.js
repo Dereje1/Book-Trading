@@ -59,7 +59,7 @@ class Books extends React.Component{
       //handle info from the form
       let book = findDOMNode(this.refs.selection).value
       book = (JSON.parse(book))
-      console.log(book)
+
       let storeBookInfo = {
          owner:       this.props.user.user.userName,
          volumeid:   book[1],
@@ -70,10 +70,13 @@ class Books extends React.Component{
          previewLink: book[0].previewLink,
          bookTitle : book[0].title
       }
+      addBook(storeBookInfo)
+      .then((b)=>{
+        this.setState({
+          addedBook:[b]
+        })
+      })
 
-      this.setState({
-        addedBook:[storeBookInfo]
-      },()=>addBook(storeBookInfo))
     }
     swapping(sID){
       this.setState({
@@ -107,7 +110,7 @@ class Books extends React.Component{
                    </Col>
                    <Col xs={12} md={6}>
                        <div className="text-center">
-                         <h3> My Books </h3>
+                         <h3> Books I Own </h3>
                        </div>
                       <Bookview newBook={this.state.addedBook} viewType="user" swap={this.state.swappingId}/>
                    </Col>

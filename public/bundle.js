@@ -13161,7 +13161,6 @@ var Bookview = function (_Component) {
   }, {
     key: 'removeBook',
     value: function removeBook(dbID) {
-      console.log(dbID, " Is ready to be deleted");
       var bookListCopy = JSON.parse(JSON.stringify(this.state.booksList));
       var indexOfDeletion = bookListCopy.findIndex(function (b) {
         return b._id === dbID;
@@ -13176,21 +13175,20 @@ var Bookview = function (_Component) {
   }, {
     key: 'tradeBook',
     value: function tradeBook(book) {
-      var _this5 = this;
-
       if (!this.props.user.user.userID) {
         window.location = '/login';
         return;
       }
       if (book.requested.length !== 0) {
-        this.props.modalCallback(book.bookTitle + " is pending another trade request approval");
+        this.props.modalCallback(book.bookTitle + " is pending a trade request approval");
         return;
       }
       var tradeInfo = {
         requested: this.props.user.user.userName
       };
       (0, _bookactions.tradeRequest)(book._id, tradeInfo).then(function (response) {
-        _this5.props.modalCallback("New Trade request for " + book.bookTitle);
+        //this.props.modalCallback("New Trade request for " + book.bookTitle)
+        window.location = '/mybooks';
       });
     }
   }, {
@@ -50729,7 +50727,7 @@ var Signup = function (_React$Component) {
       var user = (0, _reactDom.findDOMNode)(this.refs.uname).value.trim();
       var pass = (0, _reactDom.findDOMNode)(this.refs.pass).value.trim();
       var signupinfo = {
-        username: user,
+        username: user.toLowerCase(),
         password: pass
       };
       (0, _authentication.newUser)(signupinfo).then(function (response) {
@@ -50745,6 +50743,8 @@ var Signup = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       return _react2.default.createElement(
         _reactBootstrap.Grid,
         null,
@@ -50790,7 +50790,9 @@ var Signup = function (_React$Component) {
             )
           )
         ),
-        _react2.default.createElement(_infomodal2.default, { message: this.state.message })
+        _react2.default.createElement(_infomodal2.default, { message: this.state.message, reset: function reset() {
+            return _this3.setState({ message: "" });
+          } })
       );
     }
   }]);
@@ -50982,7 +50984,9 @@ var Profile = function (_React$Component) {
 
     _this.state = {
       message: "", //client interaction message
-      profile: ""
+      profile: { fullName: "undefined",
+        city: "undefined",
+        state: "undefined" }
     };
     return _this;
   }
@@ -50994,9 +50998,11 @@ var Profile = function (_React$Component) {
 
       if (prevProps.user.user.userID !== this.props.user.user.userID) {
         (0, _profileaction.getProfile)(this.props.user.user.userID).then(function (p) {
-          _this2.setState({
-            profile: p[0]
-          });
+          if (p.length) {
+            _this2.setState({
+              profile: p[0]
+            });
+          }
         });
       }
     }
@@ -51214,7 +51220,6 @@ function updateProfile(profileInfo) {
 }
 
 function getProfile(id) {
-  console.log(id);
   return new Promise(function (resolve, reject) {
     _axios2.default.get('/api/updateprofile/' + id).then(function (response) {
       resolve(response.data);
@@ -51339,10 +51344,12 @@ var Books = function (_React$Component) {
   }, {
     key: 'addBook',
     value: function addBook() {
+      var _this3 = this;
+
       //handle info from the form
       var book = (0, _reactDom.findDOMNode)(this.refs.selection).value;
       book = JSON.parse(book);
-      console.log(book);
+
       var storeBookInfo = {
         owner: this.props.user.user.userName,
         volumeid: book[1],
@@ -51353,11 +51360,10 @@ var Books = function (_React$Component) {
         previewLink: book[0].previewLink,
         bookTitle: book[0].title
       };
-
-      this.setState({
-        addedBook: [storeBookInfo]
-      }, function () {
-        return (0, _bookactions.addBook)(storeBookInfo);
+      (0, _bookactions.addBook)(storeBookInfo).then(function (b) {
+        _this3.setState({
+          addedBook: [b]
+        });
       });
     }
   }, {
@@ -51370,7 +51376,7 @@ var Books = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.props.user.user.userID) {
         return _react2.default.createElement(
@@ -51430,7 +51436,7 @@ var Books = function (_React$Component) {
                 )
               ),
               _react2.default.createElement(_tradesdashboard2.default, { currentUser: this.props.user.user.userName, swapped: function swapped(s) {
-                  return _this3.swapping(s);
+                  return _this4.swapping(s);
                 } })
             ),
             _react2.default.createElement(
@@ -51442,7 +51448,7 @@ var Books = function (_React$Component) {
                 _react2.default.createElement(
                   'h3',
                   null,
-                  ' My Books '
+                  ' Books I Own '
                 )
               ),
               _react2.default.createElement(_displaybooks2.default, { newBook: this.state.addedBook, viewType: 'user', swap: this.state.swappingId })
@@ -51569,7 +51575,7 @@ var Trades = function (_Component) {
           _react2.default.createElement(
             'span',
             null,
-            "Title: " + b.bookTitle + ", Owner: " + b.owner
+            b.bookTitle + ", Owner: " + b.owner
           ),
           _react2.default.createElement(
             'span',
@@ -51602,21 +51608,25 @@ var Trades = function (_Component) {
           _react2.default.createElement(
             'span',
             null,
-            "Title: " + b.bookTitle + ", Requested By: " + b.requested
+            b.bookTitle + ", Requested By: " + b.requested
           ),
           _react2.default.createElement(
             'span',
             null,
-            _react2.default.createElement('i', { className: 'fa fa-check approve', onClick: function onClick() {
-                _this4.approveRequest(b);
-              }, 'aria-hidden': 'true' })
-          ),
-          _react2.default.createElement(
-            'span',
-            null,
-            _react2.default.createElement('i', { className: 'fa fa-times delete', onClick: function onClick() {
-                _this4.denyRequest(b._id);
-              }, 'aria-hidden': 'true' })
+            _react2.default.createElement(
+              'span',
+              { style: { "marginRight": "10px" } },
+              _react2.default.createElement('i', { className: 'fa fa-check approve', onClick: function onClick() {
+                  _this4.approveRequest(b);
+                }, 'aria-hidden': 'true' })
+            ),
+            _react2.default.createElement(
+              'span',
+              null,
+              _react2.default.createElement('i', { className: 'fa fa-times delete', onClick: function onClick() {
+                  _this4.denyRequest(b._id);
+                }, 'aria-hidden': 'true' })
+            )
           )
         );
       });

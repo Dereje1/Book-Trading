@@ -18,7 +18,7 @@ class Signup extends React.Component{
       let user = findDOMNode(this.refs.uname).value.trim()
       let pass = findDOMNode(this.refs.pass).value.trim()
       let signupinfo={
-        username:user,
+        username:user.toLowerCase(),
         password:pass
       }
       newUser(signupinfo).then((response)=>{
@@ -52,7 +52,7 @@ class Signup extends React.Component{
                     <Button block bsStyle="warning" type="submit" onClick={this.handleNewSignUp.bind(this)}>Sign Up</Button>
                   </Col>
                 </Row>
-                <Info message={this.state.message}/>
+                <Info message={this.state.message} reset={()=>this.setState({message:""})}/>
               </Grid>
             )
       }

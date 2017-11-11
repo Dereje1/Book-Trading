@@ -42,6 +42,7 @@ app.put('/updateprofile/:_id', function(req, res){
      if(!profile.length){
        let newProfile={
          _id: profileID,
+         fullName:profileToUpdate.fullName,
          city:profileToUpdate.city,
          state: profileToUpdate.state
        }

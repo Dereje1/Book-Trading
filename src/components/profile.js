@@ -13,7 +13,9 @@ class Profile extends React.Component{
       super(props);
       this.state = {
         message:"",//client interaction message
-        profile:""
+        profile:{   fullName:"undefined",
+           city:  "undefined",
+           state: "undefined"}
       }
     }
 
@@ -21,9 +23,11 @@ class Profile extends React.Component{
       if(prevProps.user.user.userID!==this.props.user.user.userID){
         getProfile(this.props.user.user.userID)
         .then((p)=>{
-          this.setState({
-            profile:p[0]
-          })
+          if(p.length){
+            this.setState({
+              profile:p[0]
+            })
+          }
         })
       }
     }

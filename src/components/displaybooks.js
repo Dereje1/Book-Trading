@@ -85,7 +85,6 @@ class Bookview extends Component {
     return allDisplay
   }
   removeBook(dbID){
-    console.log(dbID," Is ready to be deleted")
     let bookListCopy = JSON.parse(JSON.stringify(this.state.booksList))
     let indexOfDeletion = bookListCopy.findIndex((b)=>{
       return b._id===dbID
@@ -101,7 +100,7 @@ class Bookview extends Component {
       return;
     }
     if(book.requested.length!==0){
-      this.props.modalCallback(book.bookTitle+" is pending another trade request approval")
+      this.props.modalCallback(book.bookTitle+" is pending a trade request approval")
       return;
     }
     let tradeInfo ={
@@ -109,7 +108,9 @@ class Bookview extends Component {
     }
     tradeRequest(book._id,tradeInfo)
     .then((response)=>{
-      this.props.modalCallback("New Trade request for " + book.bookTitle)
+      //this.props.modalCallback("New Trade request for " + book.bookTitle)
+      window.location='/mybooks'
+
     })
   }
   render() {

@@ -2,7 +2,7 @@ body {
   margin-top: 50px;
 }
 
-body Table, body th, body h5, body h6, body h1, body h3 {
+body Table, body th, body h5, body h6, body h1, body h2, body h3 {
   color: #d4d4d6;
   font-family: 'Spectral SC', serif;
 }

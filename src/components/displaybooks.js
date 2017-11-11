@@ -77,7 +77,7 @@ class Bookview extends Component {
             onTrade={()=>this.tradeBook(b)}
             />
             <OverlayTrigger placement="bottom" overlay={tooltip}>
-              <h5 className="booktitle">{booktitle}</h5>
+              <h6 className="booktitle">{booktitle}</h6>
             </OverlayTrigger>
         </div>
       )

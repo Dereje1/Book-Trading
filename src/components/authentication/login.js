@@ -3,25 +3,25 @@ import React from 'react'
 import {findDOMNode} from 'react-dom';
 import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-bootstrap'
 
-import {newUser} from '../actions/authentication'
-import Info from './infomodal'
+import {checkUser} from '../../actions/authentication'
+import Info from '../infomodal'
 
-class Signup extends React.Component{
+class Login extends React.Component{
     constructor(props){
-      super(props)
+      super(props);
       this.state = {
         message:""//client interaction message
       }
     }
-    handleNewSignUp(){
+    handleLogin(){
       //handle info from the form
       let user = findDOMNode(this.refs.uname).value.trim()
       let pass = findDOMNode(this.refs.pass).value.trim()
-      let signupinfo={
-        username:user.toLowerCase(),
+      let logininfo={
+        username:user,
         password:pass
       }
-      newUser(signupinfo).then((response)=>{
+      checkUser(logininfo).then((response)=>{
         if(response.status==="error"){
           this.setState({message:response.message})
         }
@@ -39,17 +39,17 @@ class Signup extends React.Component{
                 <Row>
                   <Col xs={8} xsOffset={2}>
                     <div className="text-center">
-                      <h3> Sign Up </h3>
+                      <h3> Login </h3>
                     </div>
                     <FormGroup controlId="formControlsUsername" type="text" >
                       <ControlLabel>Username</ControlLabel>
-                      <FormControl ref="uname" placeholder="Enter Username"/>
+                      <FormControl ref="uname" placeholder="Username"/>
                     </FormGroup>
                     <FormGroup controlId="formControlsPass" type="text" >
                       <ControlLabel>Password</ControlLabel>
-                      <textarea className="form-control" rows="1" ref="pass" placeholder="Enter Password"></textarea>
+                      <FormControl ref="pass" placeholder="Password"/>
                     </FormGroup>
-                    <Button block bsStyle="warning" type="submit" onClick={this.handleNewSignUp.bind(this)}>Sign Up</Button>
+                    <Button block bsStyle="warning" type="submit" onClick={this.handleLogin.bind(this)}>Login</Button>
                   </Col>
                 </Row>
                 <Info message={this.state.message} reset={()=>this.setState({message:""})}/>
@@ -58,4 +58,4 @@ class Signup extends React.Component{
       }
     }
 
-export default (Signup)
+export default (Login)

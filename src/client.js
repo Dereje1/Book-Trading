@@ -14,9 +14,9 @@ import {Router, Route, IndexRoute,browserHistory} from 'react-router';
 import Main from './main'
 import Home from './components/home'
 import About from './components/about'
-import Signup from './components/signup'
-import Login from './components/login'
-import Profile from './components/profile'
+import Signup from './components/authentication/signup'
+import Login from './components/authentication/login'
+import Profile from './components/authentication/profile'
 import Books from './components/books'
 //import combined reducer to pass to store here
 import reducers from './reducers/index'

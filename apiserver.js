@@ -11,7 +11,7 @@ var MongoStore = require('connect-mongo')(session);
 
 
 var app = express();
-//need session to store yelp data, not storing than in db, note same session as user authentication should be split out??
+//not using session in this project but good to have incase
 app.use(session(
   { secret: process.env.SESSION_SECRET,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),//warning in node if this option is not included
@@ -26,20 +26,21 @@ app.use(cookieParser());
 
 //APIs Start
 var db = require('./models/db') //mongoose required common db
-//var db = require('./models/db') //mongoose required schema
-var profiles = require('./models/profile')
-var books = require('./models/books')
-//update profile from db
-app.put('/updateprofile/:_id', function(req, res){
+
+var profiles = require('./models/profile')// schema for user profiles
+var books = require('./models/books')//schema for books
+
+
+app.put('/updateprofile/:_id', function(req, res){//update profile from db, note ids are the same as user authentication ids
    var profileToUpdate = req.body;
    var profileID = req.params._id;
    var query = {_id: profileID};
 
-   profiles.find(query,function(err,profile){
+   profiles.find(query,function(err,profile){//first search if id already has a profile attached to it
      if(err){
        res.json (err) ;
      }
-     if(!profile.length){
+     if(!profile.length){//if no profile attached then create and attach one
        let newProfile={
          _id: profileID,
          fullName:profileToUpdate.fullName,
@@ -53,8 +54,8 @@ app.put('/updateprofile/:_id', function(req, res){
          res.json(profile)
        })
      }
-     else{
-       var update = { '$set': {fullName:profileToUpdate.fullName,city: profileToUpdate.city, state: profileToUpdate.state}};
+     else{//if profile already exists then update per request
+       var update = { '$set': {fullName:profileToUpdate.fullName,city: profileToUpdate.city, state: profileToUpdate.state}};//note parse on client side to make sure all 3 fields are present
        var modified = {new: true};
        profiles.findByIdAndUpdate(profileID, update, modified, function(err, profile){
            if(err){
@@ -66,9 +67,9 @@ app.put('/updateprofile/:_id', function(req, res){
    })
 
 })
-app.get('/updateprofile/:_id', function(req, res){
-   var query = {_id: req.params._id};
 
+app.get('/updateprofile/:_id', function(req, res){//gets profile information by id used for profile page place holders
+   var query = {_id: req.params._id};
    profiles.find(query,function(err,profile){
      if(err){
        res.json (err) ;
@@ -77,7 +78,7 @@ app.get('/updateprofile/:_id', function(req, res){
    })
 })
 
-app.post('/newbook',function(req,res){
+app.post('/newbook',function(req,res){//adds a new book to the db
   var addedBook = req.body;
   books.create(addedBook,function(err,book){
     if(err){
@@ -86,7 +87,8 @@ app.post('/newbook',function(req,res){
     res.json(book)
   })
 })
-app.get('/:user',function(req,res){
+
+app.get('/:user',function(req,res){//gets books depending on request type per user or all books
   let userName = req.params.user
   let query = (userName==="All") ? {} : {owner: userName};
   books.find(query,function(err,book){
@@ -96,7 +98,8 @@ app.get('/:user',function(req,res){
     res.json(book)
   })
 })
-app.delete('/:_id', function(req,res){
+
+app.delete('/:_id', function(req,res){//deletes a book by id
   var query = {_id: req.params._id};
   books.remove(query, function(err, book){
     if(err){
@@ -106,16 +109,18 @@ app.delete('/:_id', function(req,res){
   })
 })
 
-app.put('/:_id', function(req, res){
+app.put('/:_id', function(req, res){//for requesting a trade or performing a books swap
    var infoToUpdate = req.body;
-   var pollID = req.params._id;
-   // if the field doesn't exist $set will set a new field
-   // change to findByIdAndUpdate to make it congruent with delete
+   var bookID = req.params._id;
+
+   //set update type depending on a request or approval/rejection
+   //if request/rejection simply modify request field
+   //if swapped change owner in addition to requested field
 
    let update = infoToUpdate.owner ? { '$set': {requested: infoToUpdate.requested, owner:infoToUpdate.owner}} : { '$set': {requested: infoToUpdate.requested}}
    // When true returns the updated document
    var modified = {new: true};
-   books.findByIdAndUpdate(pollID, update, modified, function(err, book){
+   books.findByIdAndUpdate(bookID, update, modified, function(err, book){
        if(err){
          throw err;
        }

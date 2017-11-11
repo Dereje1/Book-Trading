@@ -39,10 +39,10 @@ class Trades extends Component {
     let myRequestsFormatted = this.state.booksIRequested.map((b)=>{
       return(
           <ul key={b._id} className="list-group">
-            <span>{b.bookTitle + ", Owner: " + b.owner}</span>
+            <span>{b.bookTitle + "\n" +  "Owner: " + b.owner}</span>
             <span><i className="fa fa-times delete" onClick={()=>{this.cancelRequest(b._id)}} aria-hidden="true"></i></span>
           </ul>
-      )
+        )
     })
     return(
       <Accordion id="myrequests" style={{"marginTop":"10px"}}>
@@ -57,7 +57,7 @@ class Trades extends Component {
       return(
 
           <ul key={b._id} className="list-group">
-            <span>{b.bookTitle + ", Requested By: " + b.requested}</span>
+            <span>{b.bookTitle + "\n" + "Requested By: " + b.requested}</span>
             <span><span style={{"marginRight":"10px"}}><i className="fa fa-check approve" onClick={()=>{this.approveRequest(b)}} aria-hidden="true"></i></span>
             <span><i className="fa fa-times delete" onClick={()=>{this.denyRequest(b._id)}} aria-hidden="true"></i></span></span>
           </ul>

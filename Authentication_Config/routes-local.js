@@ -9,9 +9,8 @@ module.exports = function(app, passport) {
     // =====================================
     // PROFILE SECTION =====================
     // =====================================
-    // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
-    //wether a user is logged in or not json data will show up on the profile page
+    //wether a user is logged in or not json data will always show up on the profile page
     app.get('/profile', isLoggedIn, function(req, res) {
       let headerObject = req.headers //need for ip
       let ip = (headerObject['x-forwarded-for']||req.socket.remoteAddress).split(",")[0];
@@ -35,6 +34,10 @@ module.exports = function(app, passport) {
     // SIGNUP ==============================
     // =====================================
     // show the signup form
+    //Since i am not using flash middleware and since I want the messages to directly show up
+    //in the react modal on the client side I am using a customized version of authentication
+    //this gets the data returned from the strategy to be stored in (err,usr,info) where I have
+    //direct access to them
     app.post('/signup', function(req, res, next) {
       passport.authenticate('local-signup', function(err, user, info) {
         if (err) {

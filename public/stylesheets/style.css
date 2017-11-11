@@ -4,6 +4,7 @@ body {
 
 body h3 {
   color: #d4d4d6;
+  font-family: 'Spectral SC', serif;
 }
 
 body #bookshelf {
@@ -32,6 +33,7 @@ body #bookshelf .bookframe {
 body #bookshelf .bookframe .booktitle {
   align-self: center;
   color: #d4d4d6;
+  font-family: 'Spectral SC', serif;
 }
 
 body #bookshelf .bookframe .delete {
@@ -70,6 +72,7 @@ body #myrequests .list-group {
   color: #d4d4d6;
   font-size: 18px;
   justify-content: space-between;
+  white-space: pre-line;
 }
 
 body #myrequests .list-group .delete {

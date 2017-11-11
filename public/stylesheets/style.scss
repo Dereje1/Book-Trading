@@ -5,6 +5,7 @@ body{
   margin-top:50px;
   h3{
     color:#d4d4d6;
+    font-family: 'Spectral SC', serif;
   }
   #bookshelf{
     display: flex;
@@ -28,6 +29,7 @@ body{
       .booktitle{
         align-self: center;
         color:#d4d4d6;
+        font-family: 'Spectral SC', serif;
       }
       .delete{
         font-size: 30px;
@@ -61,6 +63,7 @@ body{
         color:#d4d4d6;
         font-size: 18px;
         justify-content: space-between;
+        white-space: pre-line;
         .delete{
           font-size: 30px;
           color:red;

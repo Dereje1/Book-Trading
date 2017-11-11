@@ -4,9 +4,9 @@ import {connect} from 'react-redux'
 import {findDOMNode} from 'react-dom';
 import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-bootstrap'
 
-import {updateProfile,getProfile} from '../actions/profileaction'
-import {newPass} from '../actions/authentication'
-import Info from './infomodal'
+import {updateProfile,getProfile} from '../../actions/profileaction'
+import {newPass} from '../../actions/authentication'
+import Info from '../infomodal'
 
 class Profile extends React.Component{
     constructor(props){

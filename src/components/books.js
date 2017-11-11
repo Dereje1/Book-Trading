@@ -1,25 +1,25 @@
-"use strict"//component allows creation of new poll for and authenticated user
+"use strict"//authenticated user book collection/addition/display and control
 import React from 'react'
 import {connect} from 'react-redux'
 import {findDOMNode} from 'react-dom';
 import axios from 'axios';
 import {FormControl, FormGroup, Button, ControlLabel,Grid,Col,Row} from 'react-bootstrap'
 
-import {addBook} from '../actions/bookactions'
-import Info from './infomodal'
-import Bookview from './displaybooks'
-import Trades from './tradesdashboard'
+import {addBook} from '../actions/bookactions' //adds book to db
+import Info from './infomodal'// modal display
+import Bookview from './displaybooks' //calls component customised for mybooks display
+import Trades from './tradesdashboard'//pending trades dashboard
 class Books extends React.Component{
     constructor(props){
       super(props);
       this.state = {
-        booksearch:[],
-        addedBook:[],
-        swappingId:"",
+        booksearch:[],//for updating google books seacrh on the fly
+        addedBook:[],//newly addedbooks are collected here for client side rendering
+        swappingId:"",//need this for client side rendering
         message:""//client interaction message
       }
     }
-    populateBookSearch(){
+    populateBookSearch(){//poulates the selection box with books returned from google
       let formattedSearch = this.state.booksearch.map((b,idx)=>{
         return (
           <option key={idx} value={JSON.stringify(b)}>{b[0].title}</option>
@@ -27,22 +27,23 @@ class Books extends React.Component{
       })
       return formattedSearch
     }
-    mykeydown(){
+    mykeydown(){//need to clear the time out on every key press
       //console.log(this.timerID)
       clearTimeout(this.timerID)
     }
-    searchResults(){
+    searchResults(){//searchs google books
       //console.log(this.timerID)
       this.setState({
-        booksearch:[]
+        booksearch:[]//empty out search arr
       })
       let bookSearched = findDOMNode(this.refs.search).value.trim()
-      //console.log(e,bookSearched)
-      if(!bookSearched.length){return}
+
+      if(!bookSearched.length){return}//do nothing for an empty search
       let urlBuild = "https://www.googleapis.com/books/v1/volumes?q=" + bookSearched
-      this.timerID = setTimeout(()=>{
+      this.timerID = setTimeout(()=>{//after experimenting google books api erros out on too many
+        //requets at once so put on a 1 second timer
         axios.get(urlBuild)
-        .then((response)=>{
+        .then((response)=>{//if succesful parse response from google and set client state
           let parsedData = response.data.items.map((b)=>{
             return [b.volumeInfo,b.id]
           })
@@ -55,12 +56,11 @@ class Books extends React.Component{
         })
       },1000)
     }
-    addBook(){
-      //handle info from the form
+    addBook(){//lets client add a book from selection box
       let book = findDOMNode(this.refs.selection).value
-      book = (JSON.parse(book))
+      book = (JSON.parse(book))//note storing value as string other wise can not retireve
 
-      let storeBookInfo = {
+      let storeBookInfo = {//prepare to send to db
          owner:       this.props.user.user.userName,
          volumeid:   book[1],
          traded:     false,
@@ -72,19 +72,23 @@ class Books extends React.Component{
       }
       addBook(storeBookInfo)
       .then((b)=>{
+        //note that I am adding book first in the db and then setting the 
+        //state unlike most other operations this order is important
+        //since if the user does not refresh there will be an error on deletion as
+        //database was never updated
         this.setState({
           addedBook:[b]
         })
       })
 
     }
-    swapping(sID){
+    swapping(sID){//called on an approval fo a book swap
       this.setState({
         swappingId:sID
       })
     }
     render(){
-       if(this.props.user.user.userID){
+       if(this.props.user.user.userID){//only for authenticated users
          return(
                <Grid>
                  <Row>
@@ -122,7 +126,7 @@ class Books extends React.Component{
            else{
              return(
                <Grid>
-                 <Row>
+                 <Row className="text-center">
                    <Col xs={8} xsOffset={2}>
                         <h1> Access Denied!!</h1>
                    </Col>

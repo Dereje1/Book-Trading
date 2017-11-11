@@ -1,3 +1,4 @@
+"use strict" //displays status of trades
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Accordion, Panel} from 'react-bootstrap'
@@ -11,12 +12,16 @@ class Trades extends Component {
     }
   }
   componentDidMount() {
-    axios.get('/api/All')
+    axios.get('/api/All')//get all books to see status of requests/requested
     .then((response)=>{
+      //my requets array are simply all books that contain users requeted in the
+      //requested fields of the document
       let myRequestArr= response.data.filter((b)=>{
         return (b.requested===this.props.currentUser)
       })
-
+      //pending approval books are books that (1) have a requested status
+      //(2) that those requests are not ones made by currentUser (not really necessary because a user
+      //can not request his own books but just put in there for safety) and (3) match owner field with user
       let approvalArr = response.data.filter((b)=>{
         if (b.requested!==""){
           if(b.requested!==this.props.currentUser){
@@ -26,7 +31,7 @@ class Trades extends Component {
           }
         }
       })
-      this.setState({
+      this.setState({//set client state accordingly
         booksIRequested:myRequestArr,
         booksForApproval:approvalArr
       })
@@ -35,7 +40,7 @@ class Trades extends Component {
       console.log(err)
     })
   }
-  myRequests(){
+  myRequests(){//displays users request
     let myRequestsFormatted = this.state.booksIRequested.map((b)=>{
       return(
           <ul key={b._id} className="list-group">
@@ -52,7 +57,7 @@ class Trades extends Component {
       </Accordion>
     )
   }
-  requestApprovals(){
+  requestApprovals(){//displays books requested from user
     let approvalRequestsFormatted = this.state.booksForApproval.map((b)=>{
       return(
 
@@ -71,7 +76,8 @@ class Trades extends Component {
       </Accordion>
     )
   }
-  cancelRequest(dbId){
+  //not all pending trade transactions go thru only one traderequest crud
+  cancelRequest(dbId){//cancels a reuest that the authenticated user has made before it has been approved
     let tradeInfo ={
       requested:""
     }
@@ -84,7 +90,7 @@ class Trades extends Component {
       booksIRequested:copyOfBooks
     },()=>{tradeRequest(dbId,tradeInfo)})
   }
-  denyRequest(dbId){
+  denyRequest(dbId){//denies a reuest
     let tradeInfo ={
       requested:""
     }
@@ -99,7 +105,7 @@ class Trades extends Component {
   }
   approveRequest(book){
     this.props.swapped(book._id)
-    let tradeInfo ={
+    let tradeInfo ={//note owner field notifies server to swap book owners
       requested:"",
       owner:book.requested
     }

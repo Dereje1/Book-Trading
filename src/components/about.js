@@ -47,10 +47,10 @@ class About extends React.Component{
               <tbody>
                 <tr>
                   <td>React / Redux</td>
-                  <td> Express / Node.js</td>
+                  <td>Express / Node.js</td>
                 </tr>
                 <tr>
-                  <td>Redux-Thunk</td>
+                  <td>CSS Flexbox</td>
                   <td>Mongoose / Mongodb</td>
                 </tr>
                 <tr>

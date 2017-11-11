@@ -11,22 +11,26 @@ import {Provider} from 'react-redux'
 import {Router, Route, IndexRoute,browserHistory} from 'react-router';
 
 //Import all Created react components that are associated with the router
+//standard menu (non-authenticated) components
 import Main from './main'
 import Home from './components/home'
 import About from './components/about'
 import Signup from './components/authentication/signup'
 import Login from './components/authentication/login'
+//componets visible only after logged in
 import Profile from './components/authentication/profile'
 import Books from './components/books'
 //import combined reducer to pass to store here
 import reducers from './reducers/index'
 
 //use logger for debugging only
-const middleware = applyMiddleware(thunk,logger)
-//const middleware = applyMiddleware(thunk)
+//const middleware = applyMiddleware(thunk,logger)
+const middleware = applyMiddleware(thunk)
 const store = createStore(reducers,middleware)
 
-//decalre all routes of application below note that display actually does not have a link going to it , intested I included it in the routes for pulling up a specific poll with id
+//decalre all routes of application below note that /profileadd,/passchange ,/mybooks actually
+//do not have a link going to them , instead they are included in the routes for serving
+//authneticating/authenticated actions
 const Routes = (
 <Provider store={store}>
   <Router history={browserHistory}>

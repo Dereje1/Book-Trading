@@ -1,8 +1,10 @@
+"use strict" //home page for both authorized and unauthorized users
 import React, { Component } from 'react';
 import {Col,Row} from 'react-bootstrap'
 
-import Bookview from './displaybooks'
-import Info from './infomodal'
+import Bookview from './displaybooks'// component that displays books
+import Info from './infomodal'// modal display
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -10,7 +12,7 @@ class Home extends Component {
       message:""
     }
   }
-  doModal(m){
+  doModal(m){// for call backs from child components , like control panel
     this.setState({
       message:m
     })

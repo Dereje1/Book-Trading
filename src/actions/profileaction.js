@@ -1,4 +1,4 @@
-"use strict"
+"use strict"//for updating and getting profile , non of these actions are dispatched to the store
 import axios from 'axios'
 
 export function updateProfile(profileInfo){

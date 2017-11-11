@@ -1,11 +1,6 @@
 // app/routes.js
 module.exports = function(app, passport) {
 
-
-
-    // process the signup form
-    // app.post('/signup', do all our passport stuff here);
-
     // =====================================
     // PROFILE SECTION =====================
     // =====================================
@@ -71,7 +66,8 @@ module.exports = function(app, passport) {
        }
      })(req, res, next);
    });
-
+   //process the password change, notice there is no need to check user info as user must be already logged in
+   //to access this path
    app.post('/passchange', function(req, res, next) {
      passport.authenticate('local-passchange', function(err, user, info) {
        if (err) {

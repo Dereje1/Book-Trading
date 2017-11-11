@@ -12,7 +12,8 @@ class Info extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if((prevProps.message!==this.props.message)&&(this.props.message.length)){//only show if new message in state (home)
+    //only show if new message in state and message is not empty
+    if((prevProps.message!==this.props.message)&&(this.props.message.length)){
       this.setState({
         show:true
       })
@@ -24,6 +25,8 @@ class Info extends Component {
   })
   }
   close(){
+    //note my modified modal now sends a reset callback after closing modalstate which clears
+    //the message field
     this.setState({
       show: false
     },()=>this.props.reset());

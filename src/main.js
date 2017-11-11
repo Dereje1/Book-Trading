@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
 
 import Menu from './components/menu'
-//action gets user info on every mount
+//action gets user info on every mount of this component
 import {getUser} from './actions/authentication';
 
 class Main extends React.Component{

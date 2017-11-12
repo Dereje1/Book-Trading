@@ -59,20 +59,21 @@ class Books extends React.Component{
     addBook(){//lets client add a book from selection box
       let book = findDOMNode(this.refs.selection).value
       book = (JSON.parse(book))//note storing value as string other wise can not retireve
-
+      //convert to img link to https to avoid console mixed content warning
+      let imglinkHttps = book[0].imageLinks.thumbnail.split(":")[0]+"s:"+book[0].imageLinks.thumbnail.split(":")[1]
       let storeBookInfo = {//prepare to send to db
          owner:       this.props.user.user.userName,
          volumeid:   book[1],
          traded:     false,
          requested:  "",
          timestamp:  Date.now(),
-         imgLink : book[0].imageLinks.thumbnail,
+         imgLink : imglinkHttps,
          previewLink: book[0].previewLink,
          bookTitle : book[0].title
       }
       addBook(storeBookInfo)
       .then((b)=>{
-        //note that I am adding book first in the db and then setting the 
+        //note that I am adding book first in the db and then setting the
         //state unlike most other operations this order is important
         //since if the user does not refresh there will be an error on deletion as
         //database was never updated

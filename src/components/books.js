@@ -21,8 +21,12 @@ class Books extends React.Component{
     }
     populateBookSearch(){//poulates the selection box with books returned from google
       let formattedSearch = this.state.booksearch.map((b,idx)=>{
+        let authors ="";
+        if(b[0].authors){
+          authors = b[0].authors.join(',')
+        }
         return (
-          <option key={idx} value={JSON.stringify(b)}>{b[0].title}</option>
+          <option key={idx} value={JSON.stringify(b)}>{b[0].title + " - " + authors}</option>
         )
       })
       return formattedSearch

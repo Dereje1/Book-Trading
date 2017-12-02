@@ -1,5 +1,5 @@
 # Book-Trading
-<h3>Page Link: https://dereje-book-trading.herokuapp.com//</h3>
+<h3>Page Link: https://dereje-book-trading.herokuapp.com/</h3>
 <ul>
   <li>I can view all books posted by every user.</li>
   <li>I can add a new book.</li>

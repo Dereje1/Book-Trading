@@ -32,6 +32,10 @@ var books = require('./models/books')//schema for books
 
 
 app.put('/updateprofile/:_id', function(req, res){//update profile from db, note ids are the same as user authentication ids
+  if(!req.session.authenticated){
+    res.json({"error":"Not Authenticated!!"})
+    return
+  }
    var profileToUpdate = req.body;
    var profileID = req.params._id;
    var query = {_id: profileID};
@@ -79,6 +83,10 @@ app.get('/updateprofile/:_id', function(req, res){//gets profile information by 
 })
 
 app.post('/newbook',function(req,res){//adds a new book to the db
+  if(!req.session.authenticated){
+    res.json({"error":"Not Authenticated!!"})
+    return
+  }
   var addedBook = req.body;
   books.create(addedBook,function(err,book){
     if(err){
@@ -100,6 +108,10 @@ app.get('/:user',function(req,res){//gets books depending on request type per us
 })
 
 app.delete('/:_id', function(req,res){//deletes a book by id
+  if(!req.session.authenticated){
+    res.json({"error":"Not Authenticated!!"})
+    return
+  }
   var query = {_id: req.params._id};
   books.remove(query, function(err, book){
     if(err){
@@ -110,6 +122,10 @@ app.delete('/:_id', function(req,res){//deletes a book by id
 })
 
 app.put('/:_id', function(req, res){//for requesting a trade or performing a books swap
+  if(!req.session.authenticated){
+    res.json({"error":"Not Authenticated!!"})
+    return
+  }
    var infoToUpdate = req.body;
    var bookID = req.params._id;
 

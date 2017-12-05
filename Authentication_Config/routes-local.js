@@ -7,6 +7,7 @@ module.exports = function(app, passport) {
     // we will use route middleware to verify this (the isLoggedIn function)
     //wether a user is logged in or not json data will always show up on the profile page
     app.get('/profile', isLoggedIn, function(req, res) {
+      req.session.authenticated = true;
       let headerObject = req.headers //need for ip
       let ip = (headerObject['x-forwarded-for']||req.socket.remoteAddress).split(",")[0];
       ip = (ip === "::1") ? "local" : ip
@@ -22,6 +23,7 @@ module.exports = function(app, passport) {
     // LOGOUT ==============================
     // =====================================
     app.get('/logout', function(req, res) {
+        req.session.authenticated = false;
         req.logout();
         res.redirect('/');
     });
@@ -44,6 +46,7 @@ module.exports = function(app, passport) {
         else{
           req.logIn(user, function(err) {
             if (err) { return next(err); }
+            req.session.authenticated = true;
             return res.json({status:'success',message:user.local.username + " Signed Up!"});
           });
         }
@@ -61,6 +64,7 @@ module.exports = function(app, passport) {
        else{
          req.logIn(user, function(err) {
            if (err) { return next(err); }
+           req.session.authenticated = true;
            return res.json({status:'success',message:user.local.username + " logged in!!"});
          });
        }
@@ -85,6 +89,7 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
 
+    req.session.authenticated = false;
     // if they aren't populate the profile page accordingly
     let headerObject = req.headers
      //the x-forwarded-for property of the header does not appear for local host so add an alternative or will

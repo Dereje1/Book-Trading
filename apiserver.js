@@ -7,7 +7,7 @@ var queryString = require('query-string');
 var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
-
+require('dotenv').config();
 
 
 var app = express();

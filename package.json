@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www  | node apiserver.js"
+    "start": "node ./bin/www",
+    "client": "webpack",
+    "dev": "concurrently --kill-others-on-fail \"nodemon start\" \"nodemon apiserver\""
   },
   "dependencies": {
     "axios": "latest",
@@ -18,11 +20,12 @@
     "connect-mongo": "^2.0.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^10.0.0",
     "express": "~4.15.5",
     "express-session": "latest",
     "http-proxy": "^1.16.2",
     "jade": "~1.11.0",
-    "mongoose": "^4.9.0",
+    "mongoose": "^5.12.12",
     "morgan": "~1.9.0",
     "passport": "latest",
     "passport-local": "^1.0.0",
@@ -37,7 +40,9 @@
   },
   "devDependencies": {
     "redux-logger": "^3.0.6",
-    "webpack": "^3.7.1"
+    "webpack": "^3.7.1",
+    "nodemon": "^1.18.11",
+    "concurrently": "^4.1.0"
   },
   "repository": {
     "type": "git",

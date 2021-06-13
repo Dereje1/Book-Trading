@@ -5,9 +5,10 @@ var mongoose = require( 'mongoose' );
 // Build the connection string
 //var dbURI = 'mongodb://localhost:27017/votingapp';
 var dbURI = process.env.MONGOLAB_URI;
+
 mongoose.Promise = global.Promise;
 // Create the database connection
-mongoose.connect(dbURI, { useMongoClient: true });
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true  });
 
 // CONNECTION EVENTS
 // When successfully connected

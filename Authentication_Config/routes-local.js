@@ -5,7 +5,6 @@ module.exports = function(app, passport) {
     // PROFILE SECTION =====================
     // =====================================
     // we will use route middleware to verify this (the isLoggedIn function)
-    //wether a user is logged in or not json data will always show up on the profile page
     app.get('/auth/profile', isLoggedIn, function(req, res) {
       req.session.authenticated = true;
       let headerObject = req.headers //need for ip

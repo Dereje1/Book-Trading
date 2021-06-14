@@ -6,7 +6,7 @@ module.exports = function(app, passport) {
     // =====================================
     // we will use route middleware to verify this (the isLoggedIn function)
     //wether a user is logged in or not json data will always show up on the profile page
-    app.get('/profile', isLoggedIn, function(req, res) {
+    app.get('/auth/profile', isLoggedIn, function(req, res) {
       req.session.authenticated = true;
       let headerObject = req.headers //need for ip
       let ip = (headerObject['x-forwarded-for']||req.socket.remoteAddress).split(",")[0];
@@ -22,7 +22,7 @@ module.exports = function(app, passport) {
     // =====================================
     // LOGOUT ==============================
     // =====================================
-    app.get('/logout', function(req, res) {
+    app.get('/auth/logout', function(req, res) {
         req.session.authenticated = false;
         req.logout();
         res.redirect('/');
@@ -35,7 +35,7 @@ module.exports = function(app, passport) {
     //in the react modal on the client side I am using a customized version of authentication
     //this gets the data returned from the strategy to be stored in (err,usr,info) where I have
     //direct access to them
-    app.post('/signup', function(req, res, next) {
+    app.post('/auth/signup', function(req, res, next) {
       passport.authenticate('local-signup', function(err, user, info) {
         if (err) {
           return next(err);
@@ -53,7 +53,7 @@ module.exports = function(app, passport) {
       })(req, res, next);
     });
    // process the login form
-   app.post('/login', function(req, res, next) {
+   app.post('/auth/login', function(req, res, next) {
      passport.authenticate('local-login', function(err, user, info) {
        if (err) {
          return next(err);
@@ -72,7 +72,7 @@ module.exports = function(app, passport) {
    });
    //process the password change, notice there is no need to check user info as user must be already logged in
    //to access this path
-   app.post('/passchange', function(req, res, next) {
+   app.post('/auth/passchange', function(req, res, next) {
      passport.authenticate('local-passchange', function(err, user, info) {
        if (err) {
          return next(err);

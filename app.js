@@ -1,31 +1,35 @@
 "use strict"
 var express = require('express');
+var logger = require('morgan');
 var path = require('path');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var mongoose = require('mongoose');
 
-var app = module.exports = express();
-
-var httpProxy = require('http-proxy');
-// Set up PROXY server with the module from above
-const apiProxy = httpProxy.createProxyServer(
-  {target:"http://localhost:3001"}
-)
-//apply middleware that intercepts all requests to the /api and retrieves the resources from the prxy
-
-app.use('/api',function(req,res){
-  apiProxy.web(req,res)
-})
-
-//end proxy setup
-var db = require('./models/db')
-
-require('./authserver')//add authentication
-
+var app = express();
+app.use(logger('dev')); // log every request to the console
+app.use(session(
+  { secret: process.env.SESSION_SECRET,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),//warning in node if this option is not included
+    resave: true,
+    saveUninitialized: true
+  }
+));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 //server primary route
 app.use(express.static(path.join(__dirname, 'public')));
 
+var db = require('./models/db')
+require('./authserver')(app)//add authentication
+app.use(require('./routes'));
+
 app.get('*', function(req, res){
-   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-  });
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+ });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

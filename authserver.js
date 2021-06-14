@@ -9,28 +9,21 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var flash    = require('connect-flash');
 
-var app = require('./app');
+//var app = require('./app');
 // configuration  for authentication===============================================================
 
-require('./Authentication_Config/passport-local')(passport); // pass passport for configuration
-
-// set up our express application
-app.use(logger('dev')); // log every request to the console
-app.use(cookieParser()); // read cookies (needed for auth)
-app.use(bodyParser.json()); // get information from html forms
 
 
-// required for passport
-app.use(session(
-  { secret: process.env.SESSION_SECRET,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),//warning in node if this option is not included
-    resave: true,
-    saveUninitialized: true
-  }
-)); // session secret
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
-app.use(flash());
-// routes ======================================================================
-require('./Authentication_Config/routes-local.js')(app, passport); // load our routes and pass in our app and fully configured passport
-//end authentication
+const configEntry = (app) => {
+  require('./Authentication_Config/passport-local')(passport); // pass passport for configuration
+
+
+  app.use(passport.initialize());
+  app.use(passport.session()); // persistent login sessions
+  app.use(flash());
+  // routes ======================================================================
+  require('./Authentication_Config/routes-local.js')(app, passport); // load our routes and pass in our app and fully configured passport
+  //end authentication
+}
+
+module.exports = configEntry;

@@ -5,7 +5,7 @@ export function getUser(){
   // action gets user authentication status from /profile that is generated
   //and updates store
   return function (dispatch){
-    axios.get('/profile')
+    axios.get('/auth/profile')
       .then(function(response){
           dispatch(
               {
@@ -23,7 +23,7 @@ export function getUser(){
 export function newUser(signupinfo){//routes to new user sign up and sends
   //back server response
   return new Promise(function(resolve,reject){
-    axios.post('/signup',signupinfo)
+    axios.post('/auth/signup',signupinfo)
       .then(function(response){
         resolve(response.data)
       })
@@ -36,7 +36,7 @@ export function newUser(signupinfo){//routes to new user sign up and sends
 export function checkUser(logininfo){//routes to login and sends
   //back server response
   return new Promise(function(resolve,reject){
-    axios.post('/login',logininfo)
+    axios.post('/auth/login',logininfo)
       .then(function(response){
         resolve(response.data)
       })
@@ -49,7 +49,7 @@ export function checkUser(logininfo){//routes to login and sends
 export function newPass(signupinfo){//routes to password change and sends 
   //back server response
   return new Promise(function(resolve,reject){
-    axios.post('/passchange',signupinfo)
+    axios.post('/auth/passchange',signupinfo)
       .then(function(response){
         resolve(response.data)
       })

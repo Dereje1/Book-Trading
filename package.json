@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "client": "webpack",
-    "dev": "concurrently --kill-others-on-fail \"nodemon start\" \"nodemon apiserver\""
+    "dev": "concurrently --kill-others-on-fail \"nodemon start\""
   },
   "dependencies": {
     "axios": "latest",
@@ -17,32 +17,31 @@
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.18.2",
     "connect-flash": "^0.1.1",
-    "connect-mongo": "^2.0.0",
+    "connect-mongo": "^4.4.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "dotenv": "^10.0.0",
-    "express": "~4.15.5",
+    "express": "^4.17.1",
     "express-session": "latest",
-    "http-proxy": "^1.16.2",
-    "jade": "~1.11.0",
+    "http-proxy": "^1.18.1",
     "mongoose": "^5.12.12",
-    "morgan": "~1.9.0",
+    "morgan": "^1.9.1",
     "passport": "latest",
     "passport-local": "^1.0.0",
     "query-string": "^5.0.1",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",
-    "react-dom": "^16.0.0",
+    "react-dom": "^16.14.0",
     "react-redux": "^5.0.6",
-    "react-router": "^3.0.4",
+    "react-router-dom": "^5.0.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "redux-logger": "^3.0.6",
-    "webpack": "^3.7.1",
+    "concurrently": "^4.1.0",
     "nodemon": "^1.18.11",
-    "concurrently": "^4.1.0"
+    "redux-logger": "^3.0.6",
+    "webpack": "^5.38.1"
   },
   "repository": {
     "type": "git",

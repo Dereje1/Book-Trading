@@ -5,14 +5,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo');
 
 var app = express();
 app.use(logger('dev')); // log every request to the console
 app.use(session(
   { secret: process.env.SESSION_SECRET,
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),//warning in node if this option is not included
+    store: MongoStore.create({mongoUrl: process.env.MONGOLAB_URI}),//warning in node if this option is not included
     resave: true,
     saveUninitialized: true
   }

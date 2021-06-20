@@ -4,16 +4,16 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "client": "webpack",
+    "client": "webpack serve --config webpack.config.js --hot --inline",
+    "build": "webpack --mode production",
     "dev": "concurrently --kill-others-on-fail \"nodemon start\""
   },
   "dependencies": {
     "axios": "latest",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-1": "^6.24.1",
+    "@babel/core": "^7.4.3",
+    "babel-loader": "^8.0.5",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.18.2",
     "connect-flash": "^0.1.1",
@@ -29,19 +29,22 @@
     "passport": "latest",
     "passport-local": "^1.0.0",
     "query-string": "^5.0.1",
-    "react": "^16.0.0",
+    "react": "^16.14.0",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^16.14.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^5.0.0",
     "redux": "^3.7.2",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "html-webpack-plugin": "^5.3.1"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",
     "nodemon": "^1.18.11",
     "redux-logger": "^3.0.6",
-    "webpack": "^5.38.1"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
   },
   "repository": {
     "type": "git",

@@ -21,7 +21,7 @@ class About extends React.Component{
     //when modal is closed reset back to original state
     this.setState({
       show: false
-    },this.props.router.push('/'));
+    },this.props.history.push('/'));
   }
   render(){
     return(

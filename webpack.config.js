@@ -50,18 +50,6 @@ let configMain = {
   },
   mode: "development",
 };
-//run this for production , note must set NODE_ENV to production in powershell where webpack is running PRIOR to running webpack
-//$env:NODE_ENV="production"
-// if (process.env.NODE_ENV === "production") {
-//   configMain.plugins.push(
-//     new webpack.DefinePlugin({
-//       "process.env": {
-//         NODE_ENV: JSON.stringify("production"),
-//       },
-//     }),
-//     new webpack.optimize.UglifyJsPlugin()
-//   );
-//   configMain.watch = false;
-// }
+
 
 module.exports = configMain;

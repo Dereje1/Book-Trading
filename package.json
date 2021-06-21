@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "client": "webpack serve --config webpack.config.js --hot --inline",
     "build": "webpack --mode production",
-    "dev": "concurrently --kill-others-on-fail \"nodemon start\""
+    "dev": "nodemon start"
   },
   "dependencies": {
     "axios": "latest",
@@ -39,8 +39,7 @@
     "html-webpack-plugin": "^5.3.1"
   },
   "devDependencies": {
-    "concurrently": "^4.1.0",
-    "nodemon": "^1.18.11",
+    "nodemon": "^2.0.7",
     "redux-logger": "^3.0.6",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2",
